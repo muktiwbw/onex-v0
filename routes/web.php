@@ -25,4 +25,6 @@ Route::get('/admin/users', 'AdminController@index_users')->name('admin-users');
 
 Route::get('/admin/exams/{level_id?}/{question_id?}/{do?}', 'ExamController@index')->name('admin-exams');
 
+Route::post('/admin/exams/{level_id?}/create', 'ExamController@submit_question')->name('admin-exams-create');
+
 Route::get('/logout', 'UserController@logout')->name('logout');
