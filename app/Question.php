@@ -10,7 +10,7 @@ class Question extends Model
         'number', 'body', 'type', 'essay', 'level_id',
     ];
     
-    public function questions(){
+    public function choices(){
         return $this->hasMany('App\Choice');
     }
 

@@ -14,10 +14,20 @@ class ExamController extends Controller
     public function index($level_id = null, $question_id = null, $do = null){
 
         if($do != null){
-
+            switch ($do) {
+                case 'edit':
+                    return $this->edit_question($question_id);
+                    break;
+                
+                case 'delete':
+                    return $this->delete_question($question_id);
+                    break;
+            }
         }elseif($question_id != null){
-            if($question_id = 'create'){
+            if($question_id == 'create'){
                 return $this->create_question($level_id);
+            }else{
+                return $this->show_question($question_id);
             }
         }elseif($level_id != null){
             return $this->show_level($level_id);
@@ -28,6 +38,12 @@ class ExamController extends Controller
                 'levels' => $levels
             ]);
         }
+    }
+
+    public function show_level($level_id){
+        return view('admin.level', [
+            'level' => Level::find($level_id),
+        ]);
     }
 
     public function create_question($level_id){
@@ -89,12 +105,19 @@ class ExamController extends Controller
         return 'files/'.Storage::disk('real_public')->putFileAs('audio', $audio, 'audio_level_'.$level_id.'_number_'.$number.'.'.$audio->getClientOriginalExtension());
     }
 
-    public function show_level($level_id){
-        $level = Level::find($level_id);
-
-        return view('admin.level', [
-            'level' => $level,
-            'questions' => $level->questions
+    public function show_question($question_id){
+        return view('admin.show_question', [
+            'question' => Question::find($question_id)
         ]);
+    }
+
+    public function edit_question($question_id){
+        return view('admin.edit_question', [
+            'question' => Question::find($question_id)
+        ]);
+    }
+
+    public function delete_question($question_id){
+        
     }
 }
