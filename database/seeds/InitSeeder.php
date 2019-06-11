@@ -15,9 +15,9 @@ class InitSeeder extends Seeder
     public function run()
     {
         $user = User::create([
-            'name' => 'Mukti Wibowo',
-            'email' => 'muktiw7@gmail.com',
-            'password' => Hash::make('abcd1234'),
+            'name' => 'Grand Admin',
+            'email' => 'admin@admin.com',
+            'password' => Hash::make('adminadmin'),
         ]);
 
         $privilege = Privilege::create([
