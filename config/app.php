@@ -167,8 +167,6 @@ return [
          */
 
         Unisharp\Ckeditor\ServiceProvider::class,
-        UniSharp\LaravelFilemanager\LaravelFilemanagerServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class,
         /*
          * Application Service Providers...
          */

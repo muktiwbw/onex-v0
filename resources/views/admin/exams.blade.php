@@ -18,7 +18,7 @@
     <h2>Levels</h2>
     <ul>
         @foreach($levels as $level)
-        <li><a href="{{route('admin-exams', ['level_id' => $level->id])}}">{{$level->name}}</a></li>
+        <li><a href="{{route('admin-level', ['level_id' => $level->id])}}">{{$level->name}}</a></li>
         @endforeach
     </ul>
 </body>

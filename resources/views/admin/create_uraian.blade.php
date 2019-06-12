@@ -17,8 +17,10 @@
     <h1>Exams Page</h1>
     <h2>Level {{$level->name}}</h2>
     <div>
-        <form action="#" method="post">
+        <form action="{{route('admin-uraian-store')}}" method="post">
             <textarea name="editor" id="editor" cols="30" rows="10"></textarea>
+            <input type="submit" value="Submit">
+            @csrf
         </form>
     </div>
     <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
