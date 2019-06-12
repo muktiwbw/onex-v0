@@ -7,13 +7,7 @@
     <title>Admin</title>
 </head>
 <body>
-    <nav>
-        <ul>
-            <li><a href="{{route('admin-users')}}">Users</a></li>
-            <li><a href="{{route('admin-exams')}}">Exams</a></li>
-            <li><a href="{{route('logout')}}">Logout</a></li>
-        </ul>
-    </nav>
+    @component('components.navbar')@endcomponent
     <h1>Admin Page</h1>
     <h2>Welcome, {{$name}}!</h2>
 </body>

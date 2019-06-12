@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Level;
 use App\Question;
 use App\Choice;
+use App\CaseStudy;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 
@@ -61,11 +62,18 @@ class ExamController extends Controller
     }
      
     public function create_tujuan($level_id){
-        
+        return view('admin.create_tujuan', [
+            'level' => Level::find($level_id)
+        ]);
     }
      
     public function store_tujuan(Request $request){
-        
+        // dd($request);
+        $level = Level::find($request->level_id);
+        $level->tujuan = $request->editor;
+        $level->save();
+
+        return redirect()->route('admin-level', ['level_id' => $level->id]);
     }
      
     public function create_uraian($level_id){
@@ -75,7 +83,35 @@ class ExamController extends Controller
     }
      
     public function store_uraian(Request $request){
-        dd($request);
+        // dd($request);
+        $level = Level::find($request->level_id);
+        $level->uraian = $request->editor;
+        $level->save();
+
+        return redirect()->route('admin-level', ['level_id' => $level->id]);
+    }
+
+    public function create_case_study($level_id){
+        return view('admin.create_case_study', [
+            'level' => Level::find($level_id)
+        ]);
+    }
+
+    public function store_case_study(Request $request){
+        // dd($request);
+        $level = Level::find($request->level_id);
+        // Define number
+        $newNumber = $level->case_studies()->count() > 0 ? $level->case_studies()->orderBy('number', 'desc')->first()->number + 1 : 1;
+
+        // Store in DB
+        $caseStudy = CaseStudy::create([
+            'number' => $newNumber,
+            'title' => $request->title,
+            'body' => $request->editor,
+            'level_id' => $level->id
+        ]);
+
+        return redirect()->route('admin-question-create', ['level_id' => $caseStudy->level->id]);
     }
 
     public function show_question($question_id){
@@ -83,14 +119,16 @@ class ExamController extends Controller
     }
 
     public function create_question($level_id){
-        // get level
+        // get level and case studies
         $level = Level::find($level_id);
+        $caseStudies = CaseStudy::where('level_id', $level->id)->get();
+
         // get latest number
-        $newNumber = $level->questions()->count() > 0 ? $level->questions()->orderBy('number', 'desc')->first()->number + 1 : 1;
+        // $newNumber = $level->questions()->count() > 0 ? $level->questions()->orderBy('number', 'desc')->first()->number + 1 : 1;
 
         return view('admin.create_question', [
             'level' => $level,
-            'newNumber' => $newNumber
+            'caseStudies' => $caseStudies
         ]);
     }
 

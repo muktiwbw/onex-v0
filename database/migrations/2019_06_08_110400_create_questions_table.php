@@ -17,11 +17,13 @@ class CreateQuestionsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedSmallInteger('number');
             $table->text('body');
-            $table->enum('type', ['MULTIPLE','ESSAY'])->default('MULTIPLE');
+            $table->string('answer_type')->default('MULTIPLE'); // multiple, essay, checklist
             $table->text('essay')->nullable();
             $table->unsignedBigInteger('level_id');
+            $table->unsignedBigInteger('case_study_id')->nullable();
             $table->timestamps();
             $table->foreign('level_id')->references('id')->on('levels');
+            $table->foreign('case_study_id')->references('id')->on('case_studies');
         });
     }
 

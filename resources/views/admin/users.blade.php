@@ -7,13 +7,7 @@
     <title>Admin - Users List</title>
 </head>
 <body>
-    <nav>
-        <ul>
-            <li><a href="{{route('admin-users')}}">Users</a></li>
-            <li><a href="{{route('admin-exams')}}">Exams</a></li>
-            <li><a href="{{route('logout')}}">Logout</a></li>
-        </ul>
-    </nav>
+    @component('components.navbar')@endcomponent
     <h1>Users List Page</h1>
     <ul>
         @foreach($users as $user)
