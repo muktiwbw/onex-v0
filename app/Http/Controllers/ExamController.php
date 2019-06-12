@@ -11,10 +11,23 @@ use Illuminate\Support\Facades\Storage;
 
 class ExamController extends Controller
 {
-    public function index($level_id = null, $question_id = null, $do = null){
-
+    public function index(Request $request, $level_id = null, $question_id = null, $do = null){
         if($do != null){
             switch ($do) {
+                case 'create':
+                    switch ($question_id) {
+                        case 'question':
+                            return $request->method() == 'GET' ? $this->create_question($level_id) : $this->submit_question($request);
+                            break;
+                        
+                        case 'uraian':
+                            return $request->method() == 'GET' ? $this->create_uraian($level_id) : null;
+                            break;
+                        
+                        case 'tujuan':
+                            # code...
+                            break;
+                    }
                 case 'edit':
                     return $this->edit_question($question_id);
                     break;
@@ -24,28 +37,28 @@ class ExamController extends Controller
                     break;
             }
         }elseif($question_id != null){
-            if($question_id == 'create'){
-                return $this->create_question($level_id);
-            }else{
-                return $this->show_question($question_id);
-            }
+            return $this->show_question($question_id);
         }elseif($level_id != null){
             return $this->show_level($level_id);
-        }else{
-            $levels = Level::all();
-    
+        }else{    
             return view('admin.exams', [
-                'levels' => $levels
+                'levels' => Level::all()
             ]);
         }
     }
-
+    
     public function show_level($level_id){
         return view('admin.level', [
             'level' => Level::find($level_id),
+            ]);
+        }
+
+    public function create_uraian($level_id){
+        return view('admin.create_uraian', [
+            'level' => Level::find($level_id),
         ]);
     }
-
+        
     public function create_question($level_id){
         // get level
         $level = Level::find($level_id);
@@ -57,8 +70,8 @@ class ExamController extends Controller
             'newNumber' => $newNumber
         ]);
     }
-
-    public function submit_question(Request $request){
+    
+    public function submit_question($request){
         // get question
         $questionFields = [
             'number' => $request->number,
@@ -70,47 +83,47 @@ class ExamController extends Controller
             $questionFields['type'] = 'ESSAY';
             $questionFields['essay'] = $request->essay;
         }
-
+        
         // submit question
         $question = Question::create($questionFields);
-
+        
         // get answers multiple choice
         if($request->answer_type == 'multiple'){
             $choices = [];
             $point = 'a';
-    
+            
             for($i=0;$i<count($request->multi);$i++){
                 $choices[] = [
                     'point' => $point,
                     'body' => $request->multi[$i],
                     'question_id' => $question->id
                 ];
-    
+                
                 if($request->correct == $i){
                     $choices[$i]['correct'] = TRUE;
                 }
-    
+                
                 $point++;
             }
-
+            
             foreach($choices as $choice){
                 $submittedChoice = Choice::create($choice);
             }
         }
-
+        
         return redirect()->route('admin-exams', ['level_id' => $request->level_id]);
     }
-
+    
     public function storeAudio($audio, $level_id, $number){
         return 'files/'.Storage::disk('real_public')->putFileAs('audio', $audio, 'audio_level_'.$level_id.'_number_'.$number.'.'.$audio->getClientOriginalExtension());
     }
-
+    
     public function show_question($question_id){
         return view('admin.show_question', [
             'question' => Question::find($question_id)
-        ]);
-    }
-
+            ]);
+        }
+        
     public function edit_question($question_id){
         return view('admin.edit_question', [
             'question' => Question::find($question_id)
