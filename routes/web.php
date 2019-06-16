@@ -23,8 +23,6 @@ Route::get('/admin', 'AdminController@index')->name('admin');
 
 Route::get('/admin/users', 'AdminController@index_users')->name('admin-users');
 
-// Route::match(['get','post','patch','delete'], '/admin/exams/{level_id?}/{question_id?}/{do?}', 'ExamController@index')->name('admin-exams');
-
 // Shows list of exam levels
 Route::get('/admin/exams', 'ExamController@index')->name('admin-exams');
 

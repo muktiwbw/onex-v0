@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Admin</title>
     <style>
-        #question-audio, #answer-essay{
+        #answer-essay, #answer-checklist{
             display: none;
         }
     </style>
@@ -26,23 +26,29 @@
             <a href="{{route('admin-case-study-create', ['level_id' => $level->id])}}">Buat Studi Kasus</a>
         </div>
         <div id="question-section">
-            <textarea id="question-text" name="body" cols="30" rows="10" placeholder="Fill the question body here!"></textarea>
+            <textarea id="question-body" name="question_body" cols="30" rows="10" placeholder="Fill the question body here!"></textarea>
         </div>
         <div>
-            <select name="answer-type-identifier" id="answer-type-dropdown">
+            <select name="answer_type" id="answer-type-dropdown">
                 <option value="MULTIPLE" selected>Multiple Choice</option>
                 <option value="ESSAY">Essay</option>
                 <option value="CHECKLIST">Checklist</option>
             </select>
         </div>
         <div id="answer-section">
-            <textarea name="essay" id="answer-essay" cols="30" rows="10" placeholder="Fill the answer for essay here!"></textarea>
-            <div id="answer-multiple">
+            <div class="answer-type" id="answer-checklist">
+                <div><button id="add-checklist">Tambah Checklist</button><button id="remove-checklist">Kurangi Checklist</button></div>
+                <div cl-number="1" cl-tail="true"><textarea class="checklist-elems" name="checklist[]" cols="50" rows="1"></textarea> <input type="number" name="cl_correct[]" min="0" max="5"></div>
+            </div>
+            <div class="answer-type" id="answer-essay">
+                <textarea name="essay" cols="30" rows="10" placeholder="Fill the answer for essay here!"></textarea>
+            </div>
+            <div class="answer-type" id="answer-multiple">
                 @php
                 $point = 'a';
                 @endphp
                 @for($i=0;$i<4;$i++)
-                <div> <input type="radio" name="correct" value="{{$i}}" @if($point == 'a') checked @endif> {{$point}} <textarea name="multi[]" cols="30" rows="1"></textarea></div>
+                <div><input type="radio" name="mc_correct" value="{{$i}}" @if($point == 'a') checked @endif> {{$point}} <textarea name="mc_body[]" cols="30" rows="1"></textarea></div>
                 @php
                 $point++;
                 @endphp
@@ -54,28 +60,71 @@
         <input type="submit" value="Submit">
     </form>
         
-    <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
+    <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js?cb=1234"></script>
     <script>
         (function(){
 
-            const switchQuestionButton = document.getElementById('switch-question')
-            const switchAnswerButton = document.getElementById('switch-answer')
+            const switchAnswerDropdown = document.getElementById('answer-type-dropdown')
             const answerEssay = document.getElementById('answer-essay')
             const answerMultiple = document.getElementById('answer-multiple')
-            const answerTypeIdentifier = document.getElementById('answer-type-identifier')
+            const answerChecklist = document.getElementById('answer-checklist')
+            const answerTypeSections = document.getElementsByClassName('answer-type')
+            const questionBody = document.getElementById('question-body')
 
-            const questionBody = document.getElementById('question-text')
+            const addChecklist = document.getElementById('add-checklist')
+            const removeChecklist = document.getElementById('remove-checklist')
 
-            switchAnswerButton.addEventListener('click', function(e){
+            switchAnswerDropdown.addEventListener('change', function(e){
+                e.stopPropagation()
+                
+                for (let i = 0; i < answerTypeSections.length; i++) {
+                    const element = answerTypeSections[i];
+                    element.style.display = 'none'
+                }
+
+                switch (this.value) {
+                    case 'MULTIPLE':
+                        answerMultiple.style.display = 'block'
+                        break;
+                        
+                    case 'ESSAY':
+                        answerEssay.style.display = 'block'
+                        break;
+                        
+                    case 'CHECKLIST':
+                        answerChecklist.style.display = 'block'
+                        break;
+                        
+                }
+            })
+
+            addChecklist.addEventListener('click', function(e){
                 e.preventDefault()
-                if(answerTypeIdentifier.value == 'multiple'){
-                    answerTypeIdentifier.value = 'essay'
-                    answerMultiple.style.display = 'none'
-                    answerEssay.style.display = 'block'
-                }else{
-                    answerTypeIdentifier.value = 'multiple'
-                    answerEssay.style.display = 'none'
-                    answerMultiple.style.display = 'block'
+                e.stopPropagation()
+
+                const clTail = document.querySelector('div[cl-tail="true"]')
+                const newNumber = parseInt(clTail.getAttribute('cl-number')) + 1
+
+                clTail.removeAttribute('cl-tail')
+
+                const node = document.createElement('div')
+                node.setAttribute('cl-number', newNumber)
+                node.setAttribute('cl-tail', "true")
+                node.innerHTML = '<textarea class="checklist-elems" name="checklist[]" cols="50" rows="1"></textarea> <input type="number" name="cl_correct[]" min="0" max="5">'
+                answerChecklist.appendChild(node)
+            })
+
+            removeChecklist.addEventListener('click', function(e){
+                e.preventDefault()
+                e.stopPropagation()
+
+                const clTail = document.querySelector('div[cl-tail="true"]')
+                const newNumber = parseInt(clTail.getAttribute('cl-number')) - 1
+                const clNewTail = document.querySelector('div[cl-number="'+newNumber+'"]')
+
+                if(clNewTail){
+                    clNewTail.setAttribute('cl-tail', "true")
+                    answerChecklist.removeChild(clTail)
                 }
             })
 

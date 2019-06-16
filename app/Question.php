@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Question extends Model
 {
     protected $fillable = [
-        'number', 'body', 'type', 'essay', 'level_id',
+        'number', 'body', 'answer_type', 'essay', 'level_id', 'case_study_id',
     ];
     
     public function choices(){
