@@ -25,9 +25,17 @@
     @endif
     <h2>Daftar Soal</h2>
     <div>
-        @foreach($level->questions as $question)
-        <p><a href="{{route('admin-exams', ['level_id' => $question->level->id, 'question_id' => $question->id])}}">{{$question->number}}.) {{substr($question->body,0,11) == 'files/audio' ? 'AUDIO' : 'TEXT'}} - {{$question->type}}</a></p>
-        <!-- pake question $question->body untuk nampilin pertanyaannya -->
+        @foreach($level->case_studies()->has('questions')->get() as $case_study)
+        <h3><a href="#">Studi Kasus {{$case_study->number}} - {{$case_study->title}}</a></h3>
+        <ul>
+            @foreach($case_study->questions as $question)
+            <li><a href="#">{{$question->number}}. {{$question->answer_type}}</a></li>
+            @endforeach
+        </ul>
+        @endforeach
+        <h3>Soal Tanpa Studi Kasus</h3>
+        @foreach($level->questions()->doesnthave('case_study')->get() as $question)
+        <p><a href="#">{{$question->number}}. {{$question->answer_type}}</a></p>
         @endforeach
     </div>
     <div><a href="{{route('admin-question-create', ['level_id' => $level->id])}}">Add Soal</a></div>

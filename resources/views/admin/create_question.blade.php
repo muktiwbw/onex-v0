@@ -14,7 +14,7 @@
 <body>
     @component('components.navbar')@endcomponent
     <h1>Create Question {{$level->name}}</h1>
-    <form action="{{route('admin-question-store')}}" method="POST" enctype="multipart/form-data">
+    <form action="{{route('admin-question-store')}}" method="POST">
         <div id="case-study-section">
             Studi kasus: 
             <select name="case_study">
@@ -38,7 +38,7 @@
         <div id="answer-section">
             <div class="answer-type" id="answer-checklist">
                 <div><button id="add-checklist">Tambah Checklist</button><button id="remove-checklist">Kurangi Checklist</button></div>
-                <div cl-number="1" cl-tail="true"><textarea class="checklist-elems" name="checklist[]" cols="50" rows="1"></textarea> <input type="number" name="cl_correct[]" min="0" max="5"></div>
+                <div cl-number="1" cl-tail="true"><textarea class="checklist-elems" name="checklist[]" cols="50" rows="1"></textarea> <input type="number" name="cl_correct[]" min="1" max="5"></div>
             </div>
             <div class="answer-type" id="answer-essay">
                 <textarea name="essay" cols="30" rows="10" placeholder="Fill the answer for essay here!"></textarea>
@@ -73,6 +73,8 @@
 
             const addChecklist = document.getElementById('add-checklist')
             const removeChecklist = document.getElementById('remove-checklist')
+
+            CKEDITOR.replace( questionBody );
 
             switchAnswerDropdown.addEventListener('change', function(e){
                 e.stopPropagation()
@@ -127,8 +129,6 @@
                     answerChecklist.removeChild(clTail)
                 }
             })
-
-            CKEDITOR.replace( questionBody );
         })()
     </script>
 </body>

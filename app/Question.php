@@ -17,4 +17,12 @@ class Question extends Model
     public function level(){
         return $this->belongsTo('App\Level');
     }
+
+    public function checklists(){
+        return $this->hasMany('App\Checklist');
+    }
+
+    public function case_study(){
+        return $this->belongsTo('App\CaseStudy');
+    }
 }
