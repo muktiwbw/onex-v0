@@ -140,6 +140,28 @@ class ExamController extends Controller
         ]);
     }
 
+    public function patch_question(Request $request){
+        $question = Question::find($request->question_id);
+
+        switch ($question->answer_type) {
+            case 'MULTIPLE':
+                
+                break;
+                
+            case 'ESSAY':
+                $question->case_study_id = $request->case_study != 0 ? $request->case_study : null;
+                $question->body = $request->question_body;
+                $question->essay = $request->essay;
+                $question->save();
+                return redirect()->route('admin-question', ['question_id' => $question->id]);
+                break;
+
+            case 'CHECKLIST':
+                
+                break;
+        }
+    }
+
     public function store_multiple_choice($request, $question_id){
         $point = 'a';
 
