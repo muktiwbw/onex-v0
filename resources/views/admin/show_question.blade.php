@@ -8,6 +8,11 @@
 </head>
 <body>
     <h1>{{$question->level->name}} - Number {{$question->number}}</h1>
+    @if($question->has('case_study'))
+    <div id="case-study-section">
+        <h2><a href="{{route('admin-case-study', ['case_study_id' => $question->case_study->id])}}">Case Study: {{$question->case_study->title}}</a></h2>
+    </div>
+    @endif
     <div id="question-section">
         {!!$question->body!!}
     </div>

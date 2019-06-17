@@ -26,10 +26,10 @@
     <h2>Daftar Soal</h2>
     <div>
         @foreach($level->case_studies()->has('questions')->get() as $case_study)
-        <h3><a href="#">Studi Kasus {{$case_study->number}} - {{$case_study->title}}</a></h3>
+        <h3><a href="{{route('admin-case-study', ['case_study_id' => $case_study->id])}}">Studi Kasus {{$case_study->number}} - {{$case_study->title}}</a></h3>
         <ul>
             @foreach($case_study->questions as $question)
-            <li><a href="#">{{$question->number}}. {{$question->answer_type}}</a></li>
+            <li><a href="{{route('admin-question', ['question_id' => $question->id])}}">{{$question->number}}. {{$question->answer_type}}</a></li>
             @endforeach
         </ul>
         @endforeach

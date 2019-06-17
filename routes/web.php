@@ -47,6 +47,8 @@ Route::post('/admin/uraian/create', 'ExamController@store_uraian')->name('admin-
 Route::get('/admin/level/{level_id}/casestudy/create', 'ExamController@create_case_study')->name('admin-case-study-create');
 // Store case study in DB
 Route::post('/admin/casestudy/create', 'ExamController@store_case_study')->name('admin-case-study-store');
+// Shows case study detail
+Route::get('/admin/casestudy/{case_study_id}', 'ExamController@show_case_study')->name('admin-case-study');
 
 // ============= SOAL
 // Shows specific question and its answers (essay or multiple choice)

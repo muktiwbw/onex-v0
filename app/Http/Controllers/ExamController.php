@@ -76,6 +76,12 @@ class ExamController extends Controller
         return redirect()->route('admin-question-create', ['level_id' => $caseStudy->level->id]);
     }
 
+    public function show_case_study($id){
+        return view('admin.show_case_study', [
+            'caseStudy' => CaseStudy::find($id)
+        ]);
+    }
+
     public function store_audio($audio, $level_id, $number){
         return 'files/'.Storage::disk('real_public')->putFileAs('audio', $audio, 'audio_level_'.$level_id.'_number_'.$number.'.'.$audio->getClientOriginalExtension());
     }
@@ -106,9 +112,9 @@ class ExamController extends Controller
         if($request->answer_type == 'ESSAY') $fields['essay'] = $request->essay;
         if($request->case_study != 0) {
             $fields['case_study_id'] = $request->case_study;
-            $fields['number'] = Level::find($request->level_id)->case_studies()->where('id', $request->case_study)->first()->questions()->count() > 0 ? Level::find($request->level_id)->case_studies()->where('id', $request->case_study)->first()->questions()->orderBy('number', 'desc')->first()->number + 1 : 1;
+            $fields['number'] = Level::find($request->level_id)->case_studies()->find($request->case_study)->questions()->count() > 0 ? Level::find($request->level_id)->case_studies()->find($request->case_study)->questions()->orderBy('number', 'desc')->first()->number + 1 : 1;
         }else{
-            $fields['number'] = Level::find($request->level_id)->questions()->count() > 0 ? Level::find($request->level_id)->questions()->orderBy('number', 'desc')->first()->number + 1 : 1;
+            $fields['number'] = Level::find($request->level_id)->questions()->doesnthave('case_study')->get()->count() > 0 ? Level::find($request->level_id)->questions()->doesnthave('case_study')->orderBy('number', 'desc')->first()->number + 1 : 1;
         }
 
         $question = Question::create($fields);
