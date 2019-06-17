@@ -35,7 +35,7 @@
         @endforeach
         <h3>Soal Tanpa Studi Kasus</h3>
         @foreach($level->questions()->doesnthave('case_study')->get() as $question)
-        <p><a href="#">{{$question->number}}. {{$question->answer_type}}</a></p>
+        <p><a href="{{route('admin-question', ['question_id' => $question->id])}}">{{$question->number}}. {{$question->answer_type}}</a></p>
         @endforeach
     </div>
     <div><a href="{{route('admin-question-create', ['level_id' => $level->id])}}">Add Soal</a></div>

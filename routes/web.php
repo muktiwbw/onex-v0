@@ -57,5 +57,9 @@ Route::get('/admin/question/{question_id}', 'ExamController@show_question')->nam
 Route::get('/admin/level/{level_id}/question/create', 'ExamController@create_question')->name('admin-question-create');
 // Store new question in DB
 Route::post('/admin/question/create', 'ExamController@store_question')->name('admin-question-store');
+// Shows form for editing question
+Route::get('/admin/question/{question_id}/edit', 'ExamController@edit_question')->name('admin-question-edit');
+// Patch question
+Route::post('/admin/question/patch', 'ExamController@patch_question')->name('admin-question-patch');
 
 Route::get('/logout', 'UserController@logout')->name('logout');

@@ -10,22 +10,37 @@
     <h1>Edit {{$question->level->name}} - Number {{$question->number}}</h1>
     <form action="#" method="post">
         <div id="question-section">
-            @if(substr($question->body,0,11) == 'files/audio')
-            <!-- Show media with path $question->body--> <p>{{$question->body}}</p>
-            @else
-            <textarea name="question_body" id="" cols="30" rows="10">{{$question->body}}</textarea>
-            @endif
+            <div>
+                <textarea name="question_body" id="question-body" cols="30" rows="10">{!!$question->body!!}</textarea>
+            </div>
         </div>
         <div id="answer-section">
-            @if($question->type == 'ESSAY')
-            <textarea name="essay-body" id="" cols="30" rows="10">{{$question->essay}}</textarea>
-            @else
-            @foreach($question->choices as $choice)
-            <div><input type="radio" name="correct" @if($choice->correct) checked @endif> {{$choice->point}} - <textarea name="multi[]" cols="30" rows="1">{{$choice->body}}</textarea></div>
-            @endforeach
-            @endif
+            @switch($question->answer_type)
+                @case('MULTIPLE')
+                    <div>
+                        @foreach($question->choices as $key => $choice)
+                        <p><input type="radio" name="answer_correct" value="{{$key}}" @if($choice->correct) checked @endif> <textarea name="multi[]" cols="30" rows="1">{{$choice->body}}</textarea></p>
+                        @endforeach
+                    </div>
+                    @break
+                    
+                @case('ESSAY')
+                    <div>
+                        <textarea name="essay" cols="30" rows="10">{{$question->essay}}</textarea>
+                    </div>
+                    @break
+
+                @case('CHECKLIST')
+                    @break
+            @endswitch
         </div>
         <div><input type="submit" value="Submit"></div>
     </form>
+    <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
+    <script>
+        const questionBody = document.getElementById('question-body')
+
+        CKEDITOR.replace( questionBody );
+    </script>
 </body>
 </html>

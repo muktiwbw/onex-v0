@@ -134,6 +134,12 @@ class ExamController extends Controller
         }
     }
 
+    public function edit_question($id){
+        return view('admin.edit_question', [
+            'question' => Question::find($id)
+        ]);
+    }
+
     public function store_multiple_choice($request, $question_id){
         $point = 'a';
 

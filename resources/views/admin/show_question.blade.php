@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>{{$question->level->name}} - Number {{$question->number}}</h1>
-    @if($question->has('case_study'))
+    @if($question->case_study)
     <div id="case-study-section">
         <h2><a href="{{route('admin-case-study', ['case_study_id' => $question->case_study->id])}}">Case Study: {{$question->case_study->title}}</a></h2>
     </div>
@@ -35,6 +35,6 @@
                 @break
         @endswitch
     </div>
-    <div><a href="{{route('admin-exams', ['level_id' => $question->level->id, 'question_id' => $question->id, 'do' => 'edit'])}}">Edit Soal</a></div>
+    <div><a href="{{route('admin-question-edit', ['question_id' => $question->id])}}">Edit Soal</a></div>
 </body>
 </html>
