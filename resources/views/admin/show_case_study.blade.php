@@ -7,9 +7,11 @@
     <title>Case Study {{$caseStudy->title}}</title>
 </head>
 <body>
+    @component('components.navbar')@endcomponent
     <div id="case-study-section">
         <h1>{{$caseStudy->number}}. {{$caseStudy->title}}</h1>
         {!!$caseStudy->body!!}
+        <div><a href="{{route('admin-case-study-edit', ['case_study_id' => $caseStudy->id])}}">Edit</a> - <a href="{{route('admin-case-study-remove', ['case_study_id' => $caseStudy->id])}}">Delete</a></div>
     </div>
     <div id="question-section">
         @foreach($caseStudy->questions as $question)

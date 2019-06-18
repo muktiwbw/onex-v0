@@ -49,6 +49,12 @@ Route::get('/admin/level/{level_id}/casestudy/create', 'ExamController@create_ca
 Route::post('/admin/casestudy/create', 'ExamController@store_case_study')->name('admin-case-study-store');
 // Shows case study detail
 Route::get('/admin/casestudy/{case_study_id}', 'ExamController@show_case_study')->name('admin-case-study');
+// Shows form for editing case study
+Route::get('/admin/casestudy/{case_study_id}/edit', 'ExamController@edit_case_study')->name('admin-case-study-edit');
+// Patch case study in DB
+Route::post('/admin/casestudy/patch', 'ExamController@patch_case_study')->name('admin-case-study-patch');
+// Remove case study
+Route::get('/admin/casestudy/{case_study_id}/remove', 'ExamController@remove_case_study')->name('admin-case-study-remove');
 
 // ============= SOAL
 // Shows specific question and its answers (essay or multiple choice)
@@ -61,5 +67,19 @@ Route::post('/admin/question/create', 'ExamController@store_question')->name('ad
 Route::get('/admin/question/{question_id}/edit', 'ExamController@edit_question')->name('admin-question-edit');
 // Patch question
 Route::post('/admin/question/patch', 'ExamController@patch_question')->name('admin-question-patch');
+// Remove question
+Route::get('/admin/question/{question_id}/remove', 'ExamController@remove_question')->name('admin-question-remove');
 
 Route::get('/logout', 'UserController@logout')->name('logout');
+
+// ============= PENILAIAN DIRI
+// Shows form for creating evaluation
+Route::get('/admin/level/{level_id}/evaluation/create', 'ExamController@create_evaluation')->name('admin-evaluation-create');
+// Store evaluation in DB
+Route::post('/admin/evaluation/create', 'ExamController@store_evaluation')->name('admin-evaluation-store');
+// Shows form for editing evaluation
+Route::get('/admin/evaluation/{evaluation_id}/edit', 'ExamController@edit_evaluation')->name('admin-evaluation-edit');
+// Patch evaluation in DB
+Route::post('/admin/evaluation/patch', 'ExamController@patch_evaluation')->name('admin-evaluation-patch');
+// Remove evaluation from DB
+Route::get('/admin/evaluation/{evaluation_id}/remove', 'ExamController@remove_evaluation')->name('admin-evaluation-remove');

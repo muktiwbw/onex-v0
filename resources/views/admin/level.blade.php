@@ -23,18 +23,22 @@
     {!!$level->uraian!!}
     <div><a href="{{route('admin-uraian-create', ['level_id' => $level->id])}}">Edit Uraian Materi</a></div>
     @endif
+    <h2>Penilaian Diri</h2>
+    <div>
+        
+    </div>
     <h2>Daftar Soal</h2>
     <div>
         @foreach($level->case_studies()->has('questions')->get() as $case_study)
         <h3><a href="{{route('admin-case-study', ['case_study_id' => $case_study->id])}}">Studi Kasus {{$case_study->number}} - {{$case_study->title}}</a></h3>
         <ul>
-            @foreach($case_study->questions as $question)
+            @foreach($case_study->questions()->orderBy('number', 'asc')->get() as $question)
             <li><a href="{{route('admin-question', ['question_id' => $question->id])}}">{{$question->number}}. {{$question->answer_type}}</a></li>
             @endforeach
         </ul>
         @endforeach
         <h3>Soal Tanpa Studi Kasus</h3>
-        @foreach($level->questions()->doesnthave('case_study')->get() as $question)
+        @foreach($level->questions()->doesnthave('case_study')->orderBy('number', 'asc')->get() as $question)
         <p><a href="{{route('admin-question', ['question_id' => $question->id])}}">{{$question->number}}. {{$question->answer_type}}</a></p>
         @endforeach
     </div>

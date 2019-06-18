@@ -7,6 +7,7 @@
     <title>Edit {{$question->level->name}} - Number {{$question->number}}</title>
 </head>
 <body>
+    @component('components.navbar')@endcomponent
     <h1>Edit {{$question->level->name}} - Number {{$question->number}}</h1>
     <form action="{{route('admin-question-patch')}}" method="post">
         <div id="case-study-section">
@@ -26,7 +27,7 @@
             @switch($question->answer_type)
                 @case('MULTIPLE')
                     <div>
-                        @foreach($question->choices as $key => $choice)
+                        @foreach($question->choices()->orderBy('id', 'asc')->get() as $key => $choice)
                         <p><input type="radio" name="answer_correct" value="{{$key}}" @if($choice->correct) checked @endif> <textarea name="multi[]" cols="30" rows="1">{{$choice->body}}</textarea></p>
                         @endforeach
                     </div>
@@ -41,7 +42,7 @@
                 @case('CHECKLIST')
                     <div>
                         @foreach($question->checklists()->orderBy('id', 'asc')->get() as $checklist)
-                        <p><textarea name="cl_body" cols="30" rows="1">{{$checklist->body}}</textarea><input type="number" name="cl_correct" min="1" max="5" value="{{$checklist->answer}}"></p>
+                        <p><textarea name="cl_body[]" cols="30" rows="1">{{$checklist->body}}</textarea><input type="number" name="cl_correct[]" min="1" max="5" value="{{$checklist->answer}}"></p>
                         @endforeach
                     </div>
                     @break

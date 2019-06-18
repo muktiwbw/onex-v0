@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{$question->level->name}} - Number {{$question->number}}</title>
 </head>
-<body>
+<body>  
+    @component('components.navbar')@endcomponent
     <h1>{{$question->level->name}} - Number {{$question->number}}</h1>
     @if($question->case_study)
     <div id="case-study-section">
@@ -14,9 +15,11 @@
     </div>
     @endif
     <div id="question-section">
+        <h3>Soal:</h3>
         {!!$question->body!!}
     </div>
     <div id="answer-section">
+        <h3>Jawaban:</h3>
         @switch($question->answer_type)
             @case('MULTIPLE')
                 @foreach($question->choices as $choice)
@@ -35,6 +38,6 @@
                 @break
         @endswitch
     </div>
-    <div><a href="{{route('admin-question-edit', ['question_id' => $question->id])}}">Edit Soal</a></div>
+    <div><a href="{{route('admin-question-edit', ['question_id' => $question->id])}}">Edit Soal</a> - <a href="{{route('admin-question-remove', ['question_id' => $question->id])}}">Remove Soal</a></div>
 </body>
 </html>

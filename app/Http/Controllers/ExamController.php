@@ -8,6 +8,7 @@ use App\Question;
 use App\Choice;
 use App\CaseStudy;
 use App\Checklist;
+use App\Evaluation;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 
@@ -76,14 +77,59 @@ class ExamController extends Controller
         return redirect()->route('admin-question-create', ['level_id' => $caseStudy->level->id]);
     }
 
+    public function store_audio($audio, $level_id, $number){
+        return Storage::disk('real_public')->putFileAs('audio', $audio, 'audio_level_'.$level_id.'_number_'.$number.'.'.$audio->getClientOriginalExtension());
+    }
+
     public function show_case_study($id){
         return view('admin.show_case_study', [
             'caseStudy' => CaseStudy::find($id)
         ]);
     }
 
-    public function store_audio($audio, $level_id, $number){
-        return 'files/'.Storage::disk('real_public')->putFileAs('audio', $audio, 'audio_level_'.$level_id.'_number_'.$number.'.'.$audio->getClientOriginalExtension());
+    public function edit_case_study($id){
+        return view('admin.edit_case_study', [
+            'caseStudy' => CaseStudy::find($id)
+        ]);
+    }
+
+    public function patch_case_study(Request $request){
+        $caseStudy = CaseStudy::find($request->case_study_id);
+
+        if($caseStudy->type == 'AUDIO') Storage::disk('real_public')->delete($caseStudy->body);
+
+        $caseStudy->body = $request->cs_type == 'AUDIO' ? $this->store_audio($request->cs_audio, $caseStudy->level->id, $caseStudy->number) : $request->cs_body;
+        $caseStudy->type = $request->cs_type;
+        $caseStudy->save();
+
+        return redirect()->route('admin-case-study', ['case_study_id' => $caseStudy->id]);
+    }
+
+    public function remove_case_study($id){
+        $caseStudy = CaseStudy::find($id);
+        $level_id = $caseStudy->level->id;
+
+        if($caseStudy->type == 'AUDIO') Storage::disk('real_public')->delete($caseStudy->body);
+
+        foreach ($caseStudy->questions as $question) {
+            $question->case_study_id = null;
+            $question->save();
+        }
+
+        $caseStudy->delete();
+
+        $num = 1;
+
+        $level = Level::find($level_id);
+
+        foreach ($level->case_studies()->orderBy('number', 'asc')->get() as $cs) {
+            $cs->number = $num;
+            $cs->save();
+
+            $num++;
+        }
+        
+        return redirect()->route('admin-level', ['level_id' => $level->id]);
     }
 
     public function show_question($question_id){
@@ -112,7 +158,7 @@ class ExamController extends Controller
         if($request->answer_type == 'ESSAY') $fields['essay'] = $request->essay;
         if($request->case_study != 0) {
             $fields['case_study_id'] = $request->case_study;
-            $fields['number'] = Level::find($request->level_id)->case_studies()->find($request->case_study)->questions()->count() > 0 ? Level::find($request->level_id)->case_studies()->find($request->case_study)->questions()->orderBy('number', 'desc')->first()->number + 1 : 1;
+            $fields['number'] = CaseStudy::find($request->case_study)->questions()->count() > 0 ? CaseStudy::find($request->case_study)->questions()->orderBy('number', 'desc')->first()->number + 1 : 1;
         }else{
             $fields['number'] = Level::find($request->level_id)->questions()->doesnthave('case_study')->get()->count() > 0 ? Level::find($request->level_id)->questions()->doesnthave('case_study')->orderBy('number', 'desc')->first()->number + 1 : 1;
         }
@@ -142,24 +188,104 @@ class ExamController extends Controller
 
     public function patch_question(Request $request){
         $question = Question::find($request->question_id);
+        $oldCaseStudy = $question->case_study ? $question->case_study->id : null;
+        
+        $question->case_study_id = $request->case_study != 0 ? $request->case_study : null;
+        $question->body = $request->question_body;
 
         switch ($question->answer_type) {
             case 'MULTIPLE':
-                
+                foreach ($question->choices()->orderBy('id', 'asc')->get() as $key => $choice) {
+                    $choice->body = $request->multi[$key];
+                    $choice->correct = $request->answer_correct == $key ? TRUE : FALSE;
+                    $choice->save();
+                }
                 break;
                 
             case 'ESSAY':
-                $question->case_study_id = $request->case_study != 0 ? $request->case_study : null;
-                $question->body = $request->question_body;
                 $question->essay = $request->essay;
-                $question->save();
-                return redirect()->route('admin-question', ['question_id' => $question->id]);
                 break;
 
             case 'CHECKLIST':
-                
+                foreach ($question->checklists()->orderBy('id', 'asc')->get() as $key => $checklist) {
+                    $checklist->body = $request->cl_body[$key];
+                    $checklist->answer = $request->cl_correct[$key];
+                    $checklist->save();
+                }
                 break;
         }
+
+        if($oldCaseStudy != $request->case_study){
+            if($request->case_study != 0) {
+                $question->number = CaseStudy::find($request->case_study)->questions()->count() > 0 ? CaseStudy::find($request->case_study)->questions()->orderBy('number', 'desc')->first()->number + 1 : 1;
+            }else{
+                $question->number = $question->level->questions()->doesnthave('case_study')->get()->count() > 0 ? $question->level->questions()->doesnthave('case_study')->orderBy('number', 'desc')->first()->number + 1 : 1;
+            }
+        }
+
+        $question->save();
+
+        $num = 1;
+
+        if($oldCaseStudy){
+            foreach (CaseStudy::find($oldCaseStudy)->questions()->orderBy('number', 'asc')->get() as $q) {
+                $q->number = $num;
+                $q->save();
+    
+                $num++;
+            }
+        }else{
+            foreach ($question->level->questions()->doesnthave('case_study')->orderBy('number', 'asc')->get() as $q) {
+                $q->number = $num;
+                $q->save();
+    
+                $num++;
+            }
+        }
+        
+        return redirect()->route('admin-question', ['question_id' => $question->id]);
+    }
+
+    public function remove_question($id){
+        $question = Question::find($id);
+        $level_id = $question->level->id;
+        $caseStudy = $question->case_study ? $question->case_study->id : null;
+        
+        switch ($question->answer_type) {
+            case 'MULTIPLE':
+                foreach ($question->choices as $choice) {
+                    $choice->delete();
+                }
+                break;
+            
+            case 'CHECKLIST':
+                foreach ($question->checklists as $checklist) {
+                    $checklist->delete();
+                }
+                break;
+        }
+
+        $question->delete();
+
+        $num = 1;
+
+        if($caseStudy) {
+            foreach (CaseStudy::find($caseStudy)->questions()->orderBy('number', 'asc')->get() as $q) {
+                $q->number = $num;
+                $q->save();
+    
+                $num++;
+            }
+        }else{
+            foreach (Level::find($level_id)->questions()->doesnthave('case_study')->orderBy('number', 'asc')->get() as $q) {
+                $q->number = $num;
+                $q->save();
+    
+                $num++;
+            }
+        }
+
+        return redirect()->route('admin-level', ['level_id' => $level_id]);
     }
 
     public function store_multiple_choice($request, $question_id){
@@ -194,77 +320,25 @@ class ExamController extends Controller
         return redirect()->route('admin-level', ['level_id' => $request->level_id]);
     }
     
-
-
-    // public function create_question($level_id){
-        //     // get level
-        //     $level = Level::find($level_id);
-    //     // get latest number
-    //     $newNumber = $level->questions()->count() > 0 ? $level->questions()->orderBy('number', 'desc')->first()->number + 1 : 1;
-
-    //     return view('admin.create_question', [
-    //         'level' => $level,
-    //         'newNumber' => $newNumber
-    //     ]);
-    // }
+    public function create_evaluation($level_id){
+        return view('admin.create_evaluation', [
+            'level' => Level::find($level_id)
+        ]);
+    }
     
-    // public function submit_question($request){
-    //     // get question
-    //     $questionFields = [
-    //         'number' => $request->number,
-    //         'body' => $request->question_type == 'text' ? $request->body : $this->storeAudio($request->file('audio'), $request->level_id, $request->number),
-    //         'level_id' => $request->level_id,
-    //     ];
-        
-    //     if($request->answer_type == 'essay'){
-    //         $questionFields['type'] = 'ESSAY';
-    //         $questionFields['essay'] = $request->essay;
-    //     }
-        
-    //     // submit question
-    //     $question = Question::create($questionFields);
-        
-    //     // get answers multiple choice
-    //     if($request->answer_type == 'multiple'){
-    //         $choices = [];
-    //         $point = 'a';
-            
-    //         for($i=0;$i<count($request->multi);$i++){
-    //             $choices[] = [
-    //                 'point' => $point,
-    //                 'body' => $request->multi[$i],
-    //                 'question_id' => $question->id
-    //             ];
-                
-    //             if($request->correct == $i){
-    //                 $choices[$i]['correct'] = TRUE;
-    //             }
-                
-    //             $point++;
-    //         }
-            
-    //         foreach($choices as $choice){
-    //             $submittedChoice = Choice::create($choice);
-    //         }
-    //     }
-        
-    //     return redirect()->route('admin-exams', ['level_id' => $request->level_id]);
-    // }
-    
-    
-    // public function show_question($question_id){
-    //     return view('admin.show_question', [
-    //         'question' => Question::find($question_id)
-    //         ]);
-    //     }
-        
-    // public function edit_question($question_id){
-    //     return view('admin.edit_question', [
-    //         'question' => Question::find($question_id)
-    //     ]);
-    // }
+    public function store_evaluation(Request $request){
 
-    // public function delete_question($question_id){
-        
-    // }
+    }
+    
+    public function edit_evaluation($evaluation_id){
+
+    }
+    
+    public function patch_evaluation(Request $request){
+
+    }
+    
+    public function remove_evaluation($evaluation_id){
+
+    }
 }
