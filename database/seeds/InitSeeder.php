@@ -14,16 +14,51 @@ class InitSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::create([
-            'name' => 'Grand Admin',
-            'email' => 'admin@admin.com',
-            'password' => Hash::make('adminadmin'),
-        ]);
+        $users = [
+            [
+                'name' => 'Grand Admin',
+                'email' => 'admin@admin.com',
+                'password' => 'adminadmin',
+                'type' => 'ADMIN'
+            ],
+            [
+                'name' => 'Mukti Wibowo',
+                'email' => 'mukti@mukti.com',
+                'password' => 'muktimukti',
+                'type' => 'USER'
+            ],
+            [
+                'name' => 'Putra Witama',
+                'email' => 'putra@putra.com',
+                'password' => 'putraputra',
+                'type' => 'USER'
+            ],
+            [
+                'name' => 'Hamzah Rasyidi',
+                'email' => 'hamzah@hamzah.com',
+                'password' => 'hamzahhamzah',
+                'type' => 'USER'
+            ],
+            [
+                'name' => 'Taufik Hakim',
+                'email' => 'hakim@hakim.com',
+                'password' => 'hakimhakim',
+                'type' => 'USER'
+            ]
+        ];
 
-        $privilege = Privilege::create([
-            'user_id' => $user->id,
-            'type' => 'ADMIN'
-        ]);
+        foreach ($users as $user) {
+            $u = User::create([
+                'name' => $user['name'],
+                'email' => $user['email'],
+                'password' => Hash::make($user['password']),
+            ]);
+
+            Privilege::create([
+                'user_id' => $u->id,
+                'type' => $user['type']
+            ]);
+        }
 
         $levels = ['Beginner', 'Intermediate I', 'Intermediate II', 'Advance'];
 

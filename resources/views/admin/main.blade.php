@@ -9,6 +9,6 @@
 <body>
     @component('components.navbar')@endcomponent
     <h1>Admin Page</h1>
-    <h2>Welcome, {{$name}}!</h2>
+    <h2>Welcome, {{$user->name}}!</h2>
 </body>
 </html>

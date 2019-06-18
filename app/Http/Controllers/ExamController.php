@@ -167,17 +167,15 @@ class ExamController extends Controller
 
         switch ($request->answer_type) {
             case 'MULTIPLE':
-                return $this->store_multiple_choice($request, $question->id);
+                $this->store_multiple_choice($request, $question->id);
                 break;
             
             case 'CHECKLIST':
-                return $this->store_checklist($request, $question->id);
-                break;
-            
-            default:
-                return redirect()->route('admin-level', ['level_id' => $request->level_id]);
+                $this->store_checklist($request, $question->id);
                 break;
         }
+
+        return redirect()->route('admin-level', ['level_id' => $request->level_id]);
     }
 
     public function edit_question($id){
@@ -301,8 +299,6 @@ class ExamController extends Controller
             
             $point++;
         }
-
-        return redirect()->route('admin-level', ['level_id' => $request->level_id]);
     }
 
     public function store_checklist($request, $question_id){
@@ -316,8 +312,6 @@ class ExamController extends Controller
             
             $checklist = Checklist::create($fields);
         }
-        
-        return redirect()->route('admin-level', ['level_id' => $request->level_id]);
     }
     
     public function create_evaluation($level_id){
@@ -354,6 +348,20 @@ class ExamController extends Controller
     }
     
     public function remove_evaluation($evaluation_id){
+        $evaluation = Evaluation::find($evaluation_id);
+        $level_id = $evaluation->level->id;
 
+        $evaluation->delete();
+
+        $num = 1;
+
+        foreach (Level::find($level_id)->evaluations()->orderBy('number', 'asc')->get() as $eval) {
+            $eval->number = $num;
+            $eval->save();
+
+            $num++;    
+        }
+
+        return redirect()->route('admin-level', ['level_id' => $level_id]);
     }
 }

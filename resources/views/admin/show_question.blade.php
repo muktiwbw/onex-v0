@@ -32,7 +32,7 @@
                 @break
 
             @case('CHECKLIST')
-                @foreach($question->checklists as $checklist)
+                @foreach($question->checklists()->orderBy('id', 'asc')->get() as $checklist)
                 <p>{{$checklist->body}} - @if($checklist->answer){{$checklist->answer}}@else NONE @endif</p>
                 @endforeach
                 @break

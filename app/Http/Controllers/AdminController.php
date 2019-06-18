@@ -10,18 +10,14 @@ use App\Level;
 class AdminController extends Controller
 {
     public function index(){
-        $user = Auth::user();
-
         return view('admin.main', [
-            'name' => $user->name
+            'user' => Auth::user()
         ]);
     }
 
     public function index_users(){
-        $users = User::all();
-
         return view('admin.users', [
-            'users' => $users
+            'users' => User::all()
         ]);
     }
     

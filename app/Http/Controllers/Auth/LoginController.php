@@ -39,6 +39,6 @@ class LoginController extends Controller
     }
 
     protected function redirectTo(){
-        return Auth::user()->privilege->type = 'ADMIN' ? '/admin' : '/home';
+        return Auth::user()->privilege->type == 'ADMIN' ? route('admin') : route('home');
     }
 }
