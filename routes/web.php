@@ -21,7 +21,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/logout', 'UserController@logout')->name('logout');
 
-Route::prefix('admin')->middleware('auth', 'admin')->group(function(){
+Route::prefix('/admin')->middleware('auth', 'admin')->group(function(){
     Route::get('/', 'AdminController@index')->name('admin');
     
     Route::get('/users', 'AdminController@index_users')->name('admin-users');
@@ -84,4 +84,22 @@ Route::prefix('admin')->middleware('auth', 'admin')->group(function(){
     Route::post('/evaluation/patch', 'ExamController@patch_evaluation')->name('admin-evaluation-patch');
     // Remove evaluation from DB
     Route::get('/evaluation/{evaluation_id}/remove', 'ExamController@remove_evaluation')->name('admin-evaluation-remove');
+});
+
+/**
+ *  - Add relationships to new models
+ *  - Create methods for each routes
+ *  - Create views
+ * 
+ *  - Add Laravel File Manager package
+ */
+Route::prefix('/user')->middleware('auth', 'user')->group(function(){
+    // Shows user's profile
+    Route::get('/profile', 'UserController@index')->name('user');
+    // Shows create if doesn't exist answersheet, show questions
+    Route::get('/exam/{level_id}/{question_id?}', 'UserController@show_question')->name('user-exam-questions');
+    // Store answer to DB
+    Route::post('/exam/answer/submit', 'UserController@store_answer')->name('user-exam-answer-store');
+    // Patch finished to true in answersheet
+    Route::get('/exam/{level_id}/finish', 'UserController@finish_exam')->name('user-exam-finish');
 });
