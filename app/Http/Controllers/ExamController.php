@@ -327,15 +327,30 @@ class ExamController extends Controller
     }
     
     public function store_evaluation(Request $request){
+        foreach ($request->evaluation as $key => $eval) {
+            Evaluation::create([
+                'number' => Level::find($request->level_id)->evaluations()->count() > 0 ? Level::find($request->level_id)->evaluations()->orderBy('number', 'desc')->first()->number + 1 : 1,
+                'body' => $eval,
+                'level_id' => $request->level_id
+            ]);
+        }
 
+        return redirect()->route('admin-level', ['level_id' => $request->level_id]);
     }
     
-    public function edit_evaluation($evaluation_id){
-
+    public function edit_evaluation($level_id){
+        return view('admin.edit_evaluation', [
+            'level' => Level::find($level_id)
+        ]);
     }
     
     public function patch_evaluation(Request $request){
+        foreach (Level::find($request->level_id)->evaluations()->orderBy('number', 'asc')->get() as $key => $eval) {
+            $eval->body = $request->evaluation[$key];
+            $eval->save();
+        }
 
+        return redirect()->route('admin-level', ['level_id' => $request->level_id]);
     }
     
     public function remove_evaluation($evaluation_id){

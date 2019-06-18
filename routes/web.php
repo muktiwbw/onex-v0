@@ -78,7 +78,7 @@ Route::get('/admin/level/{level_id}/evaluation/create', 'ExamController@create_e
 // Store evaluation in DB
 Route::post('/admin/evaluation/create', 'ExamController@store_evaluation')->name('admin-evaluation-store');
 // Shows form for editing evaluation
-Route::get('/admin/evaluation/{evaluation_id}/edit', 'ExamController@edit_evaluation')->name('admin-evaluation-edit');
+Route::get('/admin/evaluation/{level_id}/edit', 'ExamController@edit_evaluation')->name('admin-evaluation-edit');
 // Patch evaluation in DB
 Route::post('/admin/evaluation/patch', 'ExamController@patch_evaluation')->name('admin-evaluation-patch');
 // Remove evaluation from DB

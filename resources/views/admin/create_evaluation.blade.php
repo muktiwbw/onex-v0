@@ -10,10 +10,12 @@
     @component('components.navbar')@endcomponent
     <h1>Create Evaluation - {{$level->name}}</h1>
     <div>
-        <form action="#" method="post">
-            <div><button>Tambahkan Penilaian Diri</button> - <button>Tambahkan Penilaian Diri</button></div>
+        <form action="{{route('admin-evaluation-store')}}" method="post">
+            <div><button id="btn-add">Tambahkan Penilaian Diri</button> - <button id="btn-remove">Kurangi Penilaian Diri</button></div>
             <div id="section-body">
-                <textarea name="evaluation[]" cols="30" rows="1"></textarea>
+                <div tail="true" eval-number=1>
+                    <textarea name="evaluation[]" cols="30" rows="1"></textarea>
+                </div>
             </div>
             <div>
                 <input type="submit" value="Submit">
@@ -22,5 +24,38 @@
             @csrf
         </form>
     </div>
+    <script>
+        const btnAdd = document.getElementById('btn-add')
+        const btnRemove = document.getElementById('btn-remove')
+        const sectionBody = document.getElementById('section-body')
+
+        btnAdd.addEventListener('click', function(e){
+            e.preventDefault()
+            e.stopPropagation()
+
+            const tail = document.querySelector('div[tail="true"]')
+            const node = document.createElement('div')
+
+            node.setAttribute('eval-number', parseInt(tail.getAttribute('eval-number')) + 1)
+            node.setAttribute('tail', 'true')
+            node.innerHTML = '<textarea name="evaluation[]" cols="30" rows="1"></textarea>'
+            tail.removeAttribute('tail')
+
+            sectionBody.appendChild(node)
+        })
+
+        btnRemove.addEventListener('click', function(e){
+            e.preventDefault()
+            e.stopPropagation()
+
+            const tail = document.querySelector('div[tail="true"]')
+
+            if(parseInt(tail.getAttribute('eval-number')) == 1) return
+            
+            document.querySelector('div[eval-number="'+(parseInt(tail.getAttribute('eval-number'))-1)+'"]').setAttribute('tail', 'true')
+            
+            sectionBody.removeChild(tail)
+        })
+    </script>
 </body>
 </html>

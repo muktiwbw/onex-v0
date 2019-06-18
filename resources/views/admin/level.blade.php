@@ -24,8 +24,17 @@
     <div><a href="{{route('admin-uraian-create', ['level_id' => $level->id])}}">Edit Uraian Materi</a></div>
     @endif
     <h2>Penilaian Diri</h2>
+    @if($level->evaluations()->count() > 0)
     <div>
-        
+        <ul>
+            @foreach($level->evaluations()->orderBy('number', 'asc')->get() as $eval)
+            <li>{{$eval->number}}. {{$eval->body}} - <a href="{{route('admin-evaluation-remove', ['evaluation_id' => $eval->id])}}">Delete</a></li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+    <div>
+        <a href="{{route('admin-evaluation-create', ['level_id' => $level->id])}}">Add Penilaian Diri</a> - <a href="{{route('admin-evaluation-edit', ['level_id' => $level->id])}}">Edit Penilaian Diri</a>
     </div>
     <h2>Daftar Soal</h2>
     <div>
