@@ -40,4 +40,8 @@ class User extends Authenticatable
     public function privilege(){
         return $this->hasOne('App\Privilege');
     }
+
+    public function answer_sheets(){
+        return $this->hasMany('App\AnswerSheet');
+    }
 }

@@ -91,13 +91,13 @@ Route::prefix('/admin')->middleware('auth', 'admin')->group(function(){
  *  - Create methods for each routes
  *  - Create views
  * 
- *  - Add Laravel File Manager package
+ *  - Add Laravel File Manager package DONE
  */
 Route::prefix('/user')->middleware('auth', 'user')->group(function(){
     // Shows user's profile
     Route::get('/profile', 'UserController@index')->name('user');
     // Shows create if doesn't exist answersheet, show questions
-    Route::get('/exam/{level_id}/{question_id?}', 'UserController@show_question')->name('user-exam-questions');
+    Route::get('/exam/{level_id}/{case_study_number?}/{question_number?}', 'UserController@show_question')->name('user-exam-questions');
     // Store answer to DB
     Route::post('/exam/answer/submit', 'UserController@store_answer')->name('user-exam-answer-store');
     // Patch finished to true in answersheet

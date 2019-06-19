@@ -45,8 +45,14 @@
         const csAudio = document.getElementById('cs-audio');
         const csType = document.getElementById('cs-type');
         const typeSwitch = document.getElementById('type-switch');
+        const options = {
+            filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+            filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
+            filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+            filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
+        };
         
-        CKEDITOR.replace( 'cs_body' );
+        CKEDITOR.replace( 'cs_body', options );
 
         typeSwitch.addEventListener('click', function(e){
             e.preventDefault()

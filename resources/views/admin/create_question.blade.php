@@ -73,8 +73,14 @@
 
             const addChecklist = document.getElementById('add-checklist')
             const removeChecklist = document.getElementById('remove-checklist')
+            const options = {
+                filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+                filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
+                filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+                filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
+            };
 
-            CKEDITOR.replace( questionBody );
+            CKEDITOR.replace( questionBody, options );
 
             switchAnswerDropdown.addEventListener('change', function(e){
                 e.stopPropagation()

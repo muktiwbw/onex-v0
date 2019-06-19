@@ -54,9 +54,15 @@
     </form>
     <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
     <script>
+        const options = {
+            filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+            filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
+            filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+            filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
+        };
         const questionBody = document.getElementById('question-body')
 
-        CKEDITOR.replace( questionBody );
+        CKEDITOR.replace( questionBody, options );
     </script>
 </body>
 </html>
