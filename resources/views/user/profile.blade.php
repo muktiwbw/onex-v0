@@ -11,7 +11,7 @@
     <h2>Daftar Test</h2>
     <ul>
         @foreach($levels as $level)
-        <li><a href="#">{{$level->name}}</a></li>
+        <li><a href="{{route('user-exam-questions', ['level_id' => $level->id])}}">{{$level->name}}</a></li>
         @endforeach
     </ul>
 </body>
