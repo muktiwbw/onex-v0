@@ -17,4 +17,12 @@ class Level extends Model
     public function case_studies(){
         return $this->hasMany('App\CaseStudy');
     }
+
+    public function evaluations(){
+        return $this->hasMany('App\Evaluation');
+    }
+
+    public function answer_sheets(){
+        return $this->hasMany('App\AnswerSheet');
+    }
 }

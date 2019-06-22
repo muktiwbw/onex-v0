@@ -23,11 +23,32 @@
     {!!$level->uraian!!}
     <div><a href="{{route('admin-uraian-create', ['level_id' => $level->id])}}">Edit Uraian Materi</a></div>
     @endif
+    <h2>Penilaian Diri</h2>
+    @if($level->evaluations()->count() > 0)
+    <div>
+        <ul>
+            @foreach($level->evaluations()->orderBy('number', 'asc')->get() as $eval)
+            <li>{{$eval->number}}. {{$eval->body}} - <a href="{{route('admin-evaluation-remove', ['evaluation_id' => $eval->id])}}">Delete</a></li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+    <div>
+        <a href="{{route('admin-evaluation-create', ['level_id' => $level->id])}}">Add Penilaian Diri</a> - <a href="{{route('admin-evaluation-edit', ['level_id' => $level->id])}}">Edit Penilaian Diri</a>
+    </div>
     <h2>Daftar Soal</h2>
     <div>
-        @foreach($level->questions as $question)
-        <p><a href="{{route('admin-exams', ['level_id' => $question->level->id, 'question_id' => $question->id])}}">{{$question->number}}.) {{substr($question->body,0,11) == 'files/audio' ? 'AUDIO' : 'TEXT'}} - {{$question->type}}</a></p>
-        <!-- pake question $question->body untuk nampilin pertanyaannya -->
+        @foreach($level->case_studies()->has('questions')->get() as $case_study)
+        <h3><a href="{{route('admin-case-study', ['case_study_id' => $case_study->id])}}">Studi Kasus {{$case_study->number}} - {{$case_study->title}}</a></h3>
+        <ul>
+            @foreach($case_study->questions()->orderBy('number', 'asc')->get() as $question)
+            <li><a href="{{route('admin-question', ['question_id' => $question->id])}}">{{$question->number}}. {{$question->answer_type}}</a></li>
+            @endforeach
+        </ul>
+        @endforeach
+        <h3>Soal Tanpa Studi Kasus</h3>
+        @foreach($level->questions()->doesnthave('case_study')->orderBy('number', 'asc')->get() as $question)
+        <p><a href="{{route('admin-question', ['question_id' => $question->id])}}">{{$question->number}}. {{$question->answer_type}}</a></p>
         @endforeach
     </div>
     <div><a href="{{route('admin-question-create', ['level_id' => $level->id])}}">Add Soal</a></div>
