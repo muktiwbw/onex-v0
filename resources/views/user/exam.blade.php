@@ -8,6 +8,12 @@
 </head>
 <body>
     <!-- $question->case_study gawe ngetokno studi kasus'e soal tsb -->
+    @if($question->case_study()->count() > 0)
+    <div id="case-study-section">
+    <h2>Studi Kasus {{$question->case_study->number}}</h2>
+    {!!$question->case_study->body!!}
+    </div>
+    @endif
     <div id="number-section">{{$question->level->name}} - {{$question->number}}</div>
     <div id="question-section">{!!$question->body!!}</div>
     <div id="answer-section">
@@ -16,21 +22,22 @@
                 @case('MULTIPLE')
                     <div id="answer-multiple">
                         @foreach($question->choices()->orderBy('point', 'asc')->get() as $choice)
-                        <p><input type="radio" name="mc_answer" id="" value="{{$choice->point}}" @if($choice->point == 'a') checked @endif>{{$choice->point}}. {{$choice->body}}</p>
+                        <p><input type="radio" name="mc_answer" id="" value="{{$choice->point}}" @if(($answer != null && $answer->point == $choice->point) || ($answer == null && $choice->point == 'a')) checked @endif>{{$choice->point}}. {{$choice->body}}</p>
                         @endforeach
                     </div>
                     @break
 
                 @case('ESSAY')
                     <div id="answer-essay">
-                        <textarea name="essay" id="" cols="30" rows="10"></textarea>
+                        <textarea name="essay" id="" cols="30" rows="10">@if($answer != null) {{$answer->essay}} @endif</textarea>
                     </div>
                     @break
 
                 @case('CHECKLIST')
                     <div id="answer-checklist">
+                        @php if($answer != null) $cl_answers = json_decode($answer->checklists); @endphp
                         @foreach($question->checklists()->orderBy('id', 'asc')->get() as $checklist)
-                        <p>{{$checklist->body}} ==============> @for($i=0; $i<5; $i++) ({{$i+1}} <input type="radio" name="cl_answer[{{$loop->index}}]" id="" value="{{$i+1}}" @if($i == 0) checked @endif>) @endfor</p>
+                        <p>{{$checklist->body}} ==============> @for($i=0; $i<5; $i++) ({{$i+1}} <input type="radio" name="cl_answer[{{$loop->index}}]" id="" value="{{$i+1}}" @if(($answer != null && $cl_answers[$loop->index] == $i+1) || ($answer == null && $i == 0)) checked @endif>) @endfor</p>
                         @endforeach
                     </div>
                     @break
@@ -58,6 +65,9 @@
         @foreach($question->level->questions()->doesnthave('case_study')->orderBy('number', 'asc')->get() as $q)
         <a href="{{route('user-exam-questions', ['level_id' => $q->level->id, 'case_study_number' => 0, 'question_number' => $q->number])}}">{{$q->number}}</a> @if(!$loop->last) - @endif
         @endforeach
+    </div>
+    <div id="finish">
+        <a href="{{route('user-exam-finish', ['level' => $question->level->id])}}">Selesai</a>
     </div>
 </body>
 </html>

@@ -20,5 +20,13 @@ class AdminController extends Controller
             'users' => User::all()
         ]);
     }
+
+    public function show_user($user_id){
+        
+    }
+
+    public function show_result($user_id, $level_id){
+        
+    }
     
 }

@@ -364,4 +364,31 @@ class ExamController extends Controller
 
         return redirect()->route('admin-level', ['level_id' => $level_id]);
     }
+
+    public function edit_question_score($level_id){
+        return view('admin.edit_question_score', [
+            'level' => Level::find($level_id)
+        ]);
+    }
+
+    public function patch_question_score(Request $request){
+        $questions = [];
+
+        foreach (Level::find($request->level_id)->case_studies()->has('questions')->orderBy('number', 'asc')->get() as $cs) {
+            foreach($cs->questions()->orderBy('number', 'asc')->get() as $question){
+                $questions[] = $question;
+            }
+        }
+
+        foreach(Level::find($request->level_id)->questions()->doesnthave('case_study')->orderBy('number', 'asc')->get() as $question){
+            $questions[] = $question;
+        }
+
+        foreach($questions as $key => $question){
+            $question->score = $request->question[$key];
+            $question->save();
+        }
+
+        return redirect()->route('admin-level', ['level_id' => $request->level_id]);
+    }
 }
