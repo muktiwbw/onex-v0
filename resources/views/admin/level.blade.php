@@ -9,6 +9,8 @@
 <body>
     @component('components.navbar')@endcomponent
     <h1>Level {{$level->name}}</h1>
+    <h2>Pengaturan Level {{$level->name}}</h2>
+    <p><a href="{{route('admin-level-config', ['level_id' => $level->id])}}">Edit Pengaturan</a></p>
     <h2>Tujuan Pembelajaran</h2>
     @if($level->tujuan == null)
     <div><a href="{{route('admin-tujuan-create', ['level_id' => $level->id])}}">Add Tujuan Pembelajaran</a></div>

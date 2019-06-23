@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Level extends Model
 {
     protected $fillable = [
-        'name', 'tujuan', 'uraian',
+        'name', 'tujuan', 'uraian', 'exam_threshold', 'evaluation_threshold',
     ];
 
     public function questions(){

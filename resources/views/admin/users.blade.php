@@ -11,7 +11,7 @@
     <h1>Users List Page</h1>
     <ul>
         @foreach($users as $user)
-        <li>{{$user->name}} - {{$user->privilege->type}}</li>
+        <li>{{$user->name}} - {{$user->privilege->type}} @if($user->privilege->type == 'USER')<a href="{{route('admin-user-show', ['user_id' => $user->id])}}">Lihat progress</a> @endif</li>
         @endforeach
     </ul>
 </body>

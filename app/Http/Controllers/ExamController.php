@@ -25,6 +25,21 @@ class ExamController extends Controller
             'level' => Level::find($level_id),
         ]);
     }
+
+    public function config_level($level_id){
+        return view('admin.edit_level_config', [
+            'level' => Level::find($level_id)
+        ]);
+    }
+
+    public function patch_config_level(Request $request){
+        Level::find($request->level_id)->update([
+            'exam_threshold' => $request->exam,
+            'evaluation_threshold' => $request->evaluation,
+        ]);
+
+        return redirect()->route('admin-level-config', ['level_id' => $request->level_id]);
+    }
      
     public function create_tujuan($level_id){
         return view('admin.create_tujuan', [

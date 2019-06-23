@@ -25,4 +25,8 @@ class Question extends Model
     public function case_study(){
         return $this->belongsTo('App\CaseStudy');
     }
+
+    public function answers(){
+        return $this->hasMany('App\Answer');
+    }
 }

@@ -34,6 +34,10 @@ Route::prefix('/admin')->middleware('auth', 'admin')->group(function(){
     // ============= LEVEL
     // Shows list of tujuan, uraian, and questions in that level 
     Route::get('/level/{level_id}', 'ExamController@show_level')->name('admin-level');
+    // Shows forms for level configuration 
+    Route::get('/level/{level_id}/config', 'ExamController@config_level')->name('admin-level-config');
+    // Patch config to db
+    Route::post('/level/config/patch', 'ExamController@patch_config_level')->name('admin-level-config-patch');
     
     // ============= TUJUAN PEMBELAJARAN
     // Shows form for creating tujuan
@@ -99,6 +103,10 @@ Route::prefix('/user')->middleware('auth', 'user')->group(function(){
     Route::get('/exam/{level_id}/finish', 'UserController@finish_exam')->name('user-exam-finish');
     // Shosw evaluation form
     Route::get('/exam/{level_id}/evaluation', 'UserController@show_evaluation')->name('user-exam-evaluation');
+    // Shows result page for user
+    Route::get('/exam/{level_id}/result', 'UserController@show_result')->name('user-exam-result');
+    // Reset exam
+    Route::get('/exam/{level_id}/reset', 'UserController@reset_exam')->name('user-exam-reset');
     // Shows create if doesn't exist answersheet, show questions
     Route::get('/exam/{level_id}/{case_study_number?}/{question_number?}', 'UserController@show_question')->name('user-exam-questions');
     // Store answer to DB

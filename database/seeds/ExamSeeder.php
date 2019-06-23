@@ -22,6 +22,7 @@ class ExamSeeder extends Seeder
                 'body' => '<p>Integer non turpis vitae nisl fermentum fermentum eget eu sem. Curabitur tempor, est nec consectetur maximus, neque massa tempor nibh, vel dictum augue orci a urna. Sed sem urna, auctor.</p>',
                 'answer_type' => 'MULTIPLE',
                 'level_id' => 1,
+                'score' => 15,
                 'choices' => [
                     [
                         'point' => 'a',
@@ -49,6 +50,7 @@ class ExamSeeder extends Seeder
                 'body' => '<p>Mauris consequat feugiat eros. Ut nec mattis purus, eget malesuada enim. Maecenas vehicula semper finibus. Suspendisse risus tellus, elementum a ultrices quis, hendrerit at elit. Suspendisse non dictum tellus, eget.</p>',
                 'answer_type' => 'MULTIPLE',
                 'level_id' => 1,
+                'score' => 15,
                 'choices' => [
                     [
                         'point' => 'a',
@@ -76,6 +78,7 @@ class ExamSeeder extends Seeder
                 'body' => '<p>Phasellus in velit eget ex varius sodales. Fusce in tortor ac odio posuere convallis. In interdum laoreet rhoncus. Aenean vel lacus sed tortor placerat tempus. Mauris hendrerit ipsum nec vestibulum.</p>',
                 'answer_type' => 'MULTIPLE',
                 'level_id' => 1,
+                'score' => 15,
                 'choices' => [
                     [
                         'point' => 'a',
@@ -103,6 +106,7 @@ class ExamSeeder extends Seeder
                 'body' => '<p>Morbi quis magna metus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam pulvinar nisl non felis tempor, vel consectetur nisl ultricies. Nam consequat lacus.</p>',
                 'answer_type' => 'MULTIPLE',
                 'level_id' => 1,
+                'score' => 15,
                 'choices' => [
                     [
                         'point' => 'a',
@@ -130,6 +134,7 @@ class ExamSeeder extends Seeder
                 'body' => '<p>Nam vel nisl ac diam pretium dignissim quis sed tortor. Cras et enim sed felis lacinia vestibulum. Fusce malesuada ac turpis sed luctus. Vestibulum convallis massa nec pretium porttitor. Suspendisse.</p>',
                 'answer_type' => 'MULTIPLE',
                 'level_id' => 1,
+                'score' => 15,
                 'choices' => [
                     [
                         'point' => 'a',
@@ -161,6 +166,7 @@ class ExamSeeder extends Seeder
                 'body' => $multi['body'],
                 'answer_type' => $multi['answer_type'],
                 'level_id' => $multi['level_id'],
+                'score' => $multi['score'],
             ]);
 
             foreach ($multi['choices'] as $choice) {
@@ -242,6 +248,7 @@ class ExamSeeder extends Seeder
                     'number' => 1,
                     'body' => '<p>Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur dictum auctor mi, at dapibus justo porta in. Fusce vehicula vehicula faucibus. Nullam quis justo et lectus.</p>',
                     'answer_type' => 'CHECKLIST',
+                    'score' => 2,
                     'checklists' => [
                         [
                             'body' => 'Fusce sodales odio eu condimentum facilisis.',
@@ -267,6 +274,7 @@ class ExamSeeder extends Seeder
                     'number' => 1,
                     'body' => '<p>Sed maximus pellentesque risus ac tincidunt. Nunc ac volutpat felis. Curabitur tortor mauris, iaculis finibus enim vel, congue fringilla nulla. Quisque nec nisl tincidunt dui tincidunt luctus a vitae ante.</p>',
                     'answer_type' => 'CHECKLIST',
+                    'score' => 2,
                     'checklists' => [
                         [
                             'body' => 'Donec in augue eu turpis ultricies efficitur eu quis risus.',
@@ -294,6 +302,7 @@ class ExamSeeder extends Seeder
                     'number' => 1,
                     'body' => '<p>Aliquam mi arcu, ultricies nec justo eget, convallis vulputate odio. Nunc sed placerat orci. Nam porta nibh in consectetur fermentum. Nam molestie felis sed lectus dignissim vulputate. Maecenas sapien lectus.</p>',
                     'answer_type' => 'CHECKLIST',
+                    'score' => 1,
                     'checklists' => [
                         [
                             'body' => 'Aenean nec enim ut lorem consequat pharetra ut in nisi.',
@@ -319,6 +328,7 @@ class ExamSeeder extends Seeder
                     'number' => 1,
                     'body' => '<p>Donec a libero malesuada, lacinia nisi non, elementum lacus. Phasellus eu elit tortor. Duis accumsan nisi urna, sit amet molestie erat sagittis ullamcorper. Maecenas dui orci, aliquam eget ligula sit.</p>',
                     'answer_type' => 'CHECKLIST',
+                    'score' => 1,
                     'checklists' => [
                         [
                             'body' => 'Cras non dolor luctus, efficitur leo at, euismod ex.',
@@ -352,6 +362,7 @@ class ExamSeeder extends Seeder
                     'body' => $question['body'],
                     'answer_type' => $question['answer_type'],
                     'level_id' => $i + 2,
+                    'score' => $question['score'],
                     'case_study_id' => Level::find(($i + 2))->case_studies()->where('number', ($j + 1))->first()->id,
                 ]);
 
@@ -371,12 +382,14 @@ class ExamSeeder extends Seeder
                     'number' => 2,
                     'body' => '<p>Donec a libero malesuada, lacinia nisi non, elementum lacus. Phasellus eu elit tortor. Duis accumsan nisi urna, sit amet molestie erat sagittis ullamcorper. Maecenas dui orci, aliquam eget ligula sit.</p>',
                     'answer_type' => 'ESSAY',
+                    'score' => 3,
                     'essay' => 'Nam lobortis congue orci, vitae vulputate nisi placerat sit amet.',
                 ],
                 [
                     'number' => 2,
                     'body' => '<p>Sed et massa eget ante rutrum semper. Aenean ornare rhoncus risus, eget vehicula leo finibus sit amet. Donec quis ex pretium enim dignissim laoreet eu eu quam. Aenean tortor est.</p>',
                     'answer_type' => 'ESSAY',
+                    'score' => 7,
                     'essay' => 'Sed et erat lorem. Pellentesque habitant morbi tristique senectus et.',
                 ],
             ],
@@ -385,12 +398,14 @@ class ExamSeeder extends Seeder
                     'number' => 2,
                     'body' => '<p>In mattis venenatis justo id tincidunt. Phasellus tristique, urna sed placerat condimentum, urna metus pellentesque ex, euismod mollis felis justo sollicitudin sem. Quisque in molestie dui, quis finibus massa. Lorem.</p>',
                     'answer_type' => 'ESSAY',
+                    'score' => 8,
                     'essay' => 'Nam luctus leo eros, quis egestas ipsum maximus eget. Vivamus.',
                 ],
                 [
                     'number' => 2,
                     'body' => '<p>Suspendisse eleifend nisi libero, sit amet tincidunt nisl blandit a. Aliquam erat volutpat. Sed ac tellus gravida, gravida turpis in, posuere tellus. Sed euismod purus non dapibus commodo. Etiam fermentum.</p>',
                     'answer_type' => 'ESSAY',
+                    'score' => 6,
                     'essay' => 'Etiam et massa et nunc cursus laoreet sit amet sit.',
                 ],
             ],
@@ -403,6 +418,7 @@ class ExamSeeder extends Seeder
                     'body' => $question['body'],
                     'answer_type' => $question['answer_type'],
                     'essay' => $question['essay'],
+                    'score' => $question['score'],
                     'level_id' => $i + 2,
                     'case_study_id' => Level::find(($i + 2))->case_studies()->where('number', ($j + 1))->first()->id,
                 ]);
