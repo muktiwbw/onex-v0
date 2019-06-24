@@ -19,6 +19,7 @@ class CreateQuestionsTable extends Migration
             $table->text('body');
             $table->string('answer_type')->default('MULTIPLE'); // multiple, essay, checklist
             $table->text('essay')->nullable();
+            $table->unsignedSmallInteger('score')->nullable();
             $table->unsignedBigInteger('level_id');
             $table->unsignedBigInteger('case_study_id')->nullable();
             $table->timestamps();

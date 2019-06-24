@@ -25,6 +25,8 @@ Route::prefix('/admin')->middleware('auth', 'admin')->group(function(){
     Route::get('/', 'AdminController@index')->name('admin');
     
     Route::get('/users', 'AdminController@index_users')->name('admin-users');
+    Route::get('/users/{user_id}', 'AdminController@show_user')->name('admin-user-show');
+    Route::get('/users/{user_id}/{level_id}', 'AdminController@show_result')->name('admin-user-result');
     
     // Shows list of exam levels
     Route::get('/exams', 'ExamController@index')->name('admin-exams');
@@ -32,6 +34,10 @@ Route::prefix('/admin')->middleware('auth', 'admin')->group(function(){
     // ============= LEVEL
     // Shows list of tujuan, uraian, and questions in that level 
     Route::get('/level/{level_id}', 'ExamController@show_level')->name('admin-level');
+    // Shows forms for level configuration 
+    Route::get('/level/{level_id}/config', 'ExamController@config_level')->name('admin-level-config');
+    // Patch config to db
+    Route::post('/level/config/patch', 'ExamController@patch_config_level')->name('admin-level-config-patch');
     
     // ============= TUJUAN PEMBELAJARAN
     // Shows form for creating tujuan
@@ -72,6 +78,10 @@ Route::prefix('/admin')->middleware('auth', 'admin')->group(function(){
     Route::post('/question/patch', 'ExamController@patch_question')->name('admin-question-patch');
     // Remove question
     Route::get('/question/{question_id}/remove', 'ExamController@remove_question')->name('admin-question-remove');
+    // Shows form for editing question's score
+    Route::get('/level/{level_id}/question/scores', 'ExamController@edit_question_score')->name('admin-question-score-edit');
+    // Patch question's score
+    Route::post('/question/scores/patch', 'ExamController@patch_question_score')->name('admin-question-score-patch');
     
     // ============= PENILAIAN DIRI
     // Shows form for creating evaluation
@@ -86,20 +96,21 @@ Route::prefix('/admin')->middleware('auth', 'admin')->group(function(){
     Route::get('/evaluation/{evaluation_id}/remove', 'ExamController@remove_evaluation')->name('admin-evaluation-remove');
 });
 
-/**
- *  - Add relationships to new models
- *  - Create methods for each routes
- *  - Create views
- * 
- *  - Add Laravel File Manager package DONE
- */
 Route::prefix('/user')->middleware('auth', 'user')->group(function(){
     // Shows user's profile
     Route::get('/profile', 'UserController@index')->name('user');
+    // Patch finished to true in answersheet
+    Route::get('/exam/{level_id}/finish', 'UserController@finish_exam')->name('user-exam-finish');
+    // Shosw evaluation form
+    Route::get('/exam/{level_id}/evaluation', 'UserController@show_evaluation')->name('user-exam-evaluation');
+    // Shows result page for user
+    Route::get('/exam/{level_id}/result', 'UserController@show_result')->name('user-exam-result');
+    // Reset exam
+    Route::get('/exam/{level_id}/reset', 'UserController@reset_exam')->name('user-exam-reset');
     // Shows create if doesn't exist answersheet, show questions
     Route::get('/exam/{level_id}/{case_study_number?}/{question_number?}', 'UserController@show_question')->name('user-exam-questions');
     // Store answer to DB
     Route::post('/exam/answer/submit', 'UserController@store_answer')->name('user-exam-answer-store');
-    // Patch finished to true in answersheet
-    Route::get('/exam/{level_id}/finish', 'UserController@finish_exam')->name('user-exam-finish');
+    // Submit evaluation to DB
+    Route::post('/exam/evaluation/submit', 'UserController@store_evaluation')->name('user-exam-evaluation-store');
 });
