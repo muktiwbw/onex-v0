@@ -23,12 +23,14 @@ class ExamController extends Controller
     public function show_level($level_id){
         return view('admin.level', [
             'level' => Level::find($level_id),
+            'levels' => Level::all(),
         ]);
     }
 
     public function config_level($level_id){
         return view('admin.edit_level_config', [
-            'level' => Level::find($level_id)
+            'level' => Level::find($level_id),
+            'levels' => Level::all(),
         ]);
     }
 
@@ -43,6 +45,7 @@ class ExamController extends Controller
      
     public function create_tujuan($level_id){
         return view('admin.create_tujuan', [
+            'levels' => Level::all(),
             'level' => Level::find($level_id)
         ]);
     }
@@ -57,6 +60,7 @@ class ExamController extends Controller
      
     public function create_uraian($level_id){
         return view('admin.create_uraian', [
+            'levels' => Level::all(),
             'level' => Level::find($level_id)
         ]);
     }
@@ -71,6 +75,7 @@ class ExamController extends Controller
 
     public function create_case_study($level_id){
         return view('admin.create_case_study', [
+            'levels' => Level::all(),
             'level' => Level::find($level_id)
         ]);
     }
@@ -98,12 +103,14 @@ class ExamController extends Controller
 
     public function show_case_study($id){
         return view('admin.show_case_study', [
+            'levels' => Level::all(),
             'caseStudy' => CaseStudy::find($id)
         ]);
     }
 
     public function edit_case_study($id){
         return view('admin.edit_case_study', [
+            'levels' => Level::all(),
             'caseStudy' => CaseStudy::find($id)
         ]);
     }
@@ -149,6 +156,7 @@ class ExamController extends Controller
 
     public function show_question($question_id){
         return view('admin.show_question', [
+            'levels' => Level::all(),
             'question' => Question::find($question_id)
         ]);
     }
@@ -158,6 +166,7 @@ class ExamController extends Controller
         $caseStudies = CaseStudy::where('level_id', $level->id)->get();
 
         return view('admin.create_question', [
+            'levels' => Level::all(),
             'level' => $level,
             'caseStudies' => $caseStudies
         ]);
@@ -195,6 +204,7 @@ class ExamController extends Controller
 
     public function edit_question($id){
         return view('admin.edit_question', [
+            'levels' => Level::all(),
             'question' => Question::find($id)
         ]);
     }
@@ -331,6 +341,7 @@ class ExamController extends Controller
     
     public function create_evaluation($level_id){
         return view('admin.create_evaluation', [
+            'levels' => Level::all(),
             'level' => Level::find($level_id)
         ]);
     }
@@ -349,6 +360,7 @@ class ExamController extends Controller
     
     public function edit_evaluation($level_id){
         return view('admin.edit_evaluation', [
+            'levels' => Level::all(),
             'level' => Level::find($level_id)
         ]);
     }
@@ -382,6 +394,7 @@ class ExamController extends Controller
 
     public function edit_question_score($level_id){
         return view('admin.edit_question_score', [
+            'levels' => Level::all(),
             'level' => Level::find($level_id)
         ]);
     }

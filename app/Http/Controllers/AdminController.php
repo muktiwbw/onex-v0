@@ -12,13 +12,15 @@ class AdminController extends Controller
 {
     public function index(){
         return view('admin.main', [
-            'user' => Auth::user()
+            'user' => Auth::user(),
+            'levels' => Level::all(),
         ]);
     }
 
     public function index_users(){
         return view('admin.users', [
             'users' => User::all(),
+            'levels' => Level::all(),
         ]);
     }
 
@@ -28,6 +30,7 @@ class AdminController extends Controller
             'answer_sheets' => AnswerSheet::where('finished', true)->whereHas('user', function($user) use($user_id){
                 $user->where('id', $user_id);
             })->get(),
+            'levels' => Level::all(),
         ]);
     }
 
@@ -53,7 +56,8 @@ class AdminController extends Controller
 
         return view('admin.show_user_result', [
             'answer_sheet' => User::find($user_id)->answer_sheets()->where('level_id', $level_id)->first(),
-            'total_score' => $totalScore
+            'total_score' => $totalScore,
+            'levels' => Level::all(),
         ]);
     }
     
