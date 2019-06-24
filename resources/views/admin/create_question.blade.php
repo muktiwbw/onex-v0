@@ -45,13 +45,13 @@
             </div>
             <div class="answer-type" id="answer-multiple">
                 @php
-                $point = 'a';
+                    $point = 'a';
                 @endphp
                 @for($i=0;$i<4;$i++)
-                <div><input type="radio" name="mc_correct" value="{{$i}}" @if($point == 'a') checked @endif> {{$point}} <textarea name="mc_body[]" cols="30" rows="1"></textarea></div>
-                @php
-                $point++;
-                @endphp
+                    <div><input type="radio" name="mc_correct" value="{{$i}}" @if($point == 'a') checked @endif> {{$point}} <textarea name="mc_body[]" cols="30" rows="1"></textarea></div>
+                    @php
+                        $point++;
+                    @endphp
                 @endfor
             </div>
         </div>

@@ -1,22 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Admin - Create Tujuan Pembelajaran</title>
-</head>
-<body>
-    @component('components.navbar')@endcomponent
-    <h1>Buat Tujuan Pembelajaran</h1>
-    <h2>Level {{$level->name}}</h2>
-    <div>
-        <form action="{{route('admin-tujuan-store')}}" method="post">
-            <textarea name="editor" id="editor" cols="30" rows="10">{{$level->tujuan}}</textarea>
-            <input type="submit" value="Submit">
-            <input type="hidden" name="level_id" value="{{$level->id}}">
-            @csrf
-        </form>
+@extends('admin.main')
+@section('content')
+    <h1 class="h3 mb-4 text-gray-800">
+        Buat Tujuan Pembelajaran
+    </h1>
+    <div class="row">
+        <div class="col-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Level {{$level->name}}
+                    </h6>
+                </div>
+
+                <div class="card-body">
+                    <form action="{{route('admin-tujuan-store')}}" method="post">
+                        <textarea name="editor" id="editor" cols="30" rows="10">{{$level->tujuan}}</textarea>
+                        <input type="hidden" name="level_id" value="{{$level->id}}">
+                        <input type="submit" class="btn btn-primary mt-3" value="Simpan">
+                        @csrf
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
     <script>
@@ -28,5 +33,4 @@
         };
         CKEDITOR.replace( 'editor', options );
     </script>
-</body>
-</html>
+@endsection
