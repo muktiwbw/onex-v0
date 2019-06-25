@@ -20,7 +20,7 @@
                     <form action="{{route('admin-evaluation-store')}}" method="post">
                             <div id="section-body">
                                 <div class="form-group" tail="true" eval-number=1>
-                                <label>Nomor 1</label>
+                                    <label>Nomor 1</label>
                                     <textarea class="form-control" name="evaluation[]" rows="1"></textarea>
                                 </div>
                             </div>

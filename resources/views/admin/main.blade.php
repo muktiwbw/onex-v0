@@ -11,7 +11,11 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/sb-admin-2.min.css') }}">
     
     <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
-    
+    <style>
+        #answer-essay, #answer-checklist{
+            display: none;
+        }
+    </style>
 </head>
 <body id="page-top">
 
