@@ -7,13 +7,21 @@ use Auth;
 use App\User;
 use App\Level;
 use App\AnswerSheet;
+use App\Question;
+use App\CaseStudy;
 
 class AdminController extends Controller
 {
     public function index(){
-        return view('admin.main', [
+        return view('admin.dashboard', [
             'user' => Auth::user(),
             'levels' => Level::all(),
+            'participants' => User::whereHas('privilege', function($privilege){
+                $privilege->where('type', 'USER');
+            })->get(),
+            'answer_sheets' => AnswerSheet::where('finished', true),
+            'questions' => Question::all(),
+            'case_studies' => CaseStudy::all(),
         ]);
     }
 

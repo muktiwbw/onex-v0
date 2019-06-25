@@ -9,6 +9,7 @@ use App\Choice;
 use App\CaseStudy;
 use App\Checklist;
 use App\Evaluation;
+use App\User;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,7 +17,10 @@ class ExamController extends Controller
 {    
     public function index(){
         return view('admin.exams', [
-            'levels' => Level::all()
+            'levels' => Level::all(),
+            'users' => User::whereHas('privilege', function($privilege){
+                $privilege->where('type', 'USER');
+            })->get(),
         ]);
     }
 
