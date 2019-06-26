@@ -152,6 +152,7 @@ class UserController extends Controller
     public function show_evaluation($level_id){
         return Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->evaluation_answers()->count() > 0 ? redirect()->route('user-exam-result', ['level_id' => $level_id]) : view('user.evaluation', [
             'level' => Level::find($level_id),
+            'levels' => Level::all(),
             ]);
         }
         

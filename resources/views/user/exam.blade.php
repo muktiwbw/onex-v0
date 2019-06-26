@@ -1,64 +1,101 @@
 @extends('user.main_exam')
 @section('content')
+    <h1 class="h3 mb-4 text-gray-800">
+        {{$question->level->name}}
+    </h1>
     @if($question->case_study()->count() > 0)
-    <div id="case-study-section">
-    <h2>Studi Kasus {{$question->case_study->number}}</h2>
-    {!!$question->case_study->body!!}
-    </div>
-    @endif
-    <div id="number-section">{{$question->level->name}} - {{$question->number}}</div>
-    <div id="question-section">{!!$question->body!!}</div>
-    <div id="answer-section">
-        <form action="{{route('user-exam-answer-store')}}" method="post">
-            @switch($question->answer_type)
-                @case('MULTIPLE')
-                    <div id="answer-multiple">
-                        @foreach($question->choices()->orderBy('point', 'asc')->get() as $choice)
-                        <p><input type="radio" name="mc_answer" id="" value="{{$choice->point}}" @if(($answer != null && $answer->point == $choice->point) || ($answer == null && $choice->point == 'a')) checked @endif>{{$choice->point}}. {{$choice->body}}</p>
-                        @endforeach
+        <div class="row">
+            <div class="col-md-12" id="case-study-section">
+                <!-- Collapsable Card Example -->
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Accordion -->
+                    <a href="#study{{$question->case_study->id}}" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="study{{$question->case_study->id}}">
+                        <h6 class="m-0 font-weight-bold text-primary">Studi Kasus - {{$question->case_study->number}}</h6>
+                    </a>
+                    <!-- Card Content - Collapse -->
+                    <div class="collapse show" id="study{{$question->case_study->id}}">
+                        <div class="card-body">
+                            {!!$question->case_study->body!!}
+                        </div>
                     </div>
-                    @break
-
-                @case('ESSAY')
-                    <div id="answer-essay">
-                        <textarea name="essay" id="" cols="30" rows="10">@if($answer != null) {{$answer->essay}} @endif</textarea>
-                    </div>
-                    @break
-
-                @case('CHECKLIST')
-                    <div id="answer-checklist">
-                        @php if($answer != null) $cl_answers = json_decode($answer->checklists); @endphp
-                        @foreach($question->checklists()->orderBy('id', 'asc')->get() as $checklist)
-                        <p>{{$checklist->body}} ==============> @for($i=0; $i<5; $i++) ({{$i+1}} <input type="radio" name="cl_answer[{{$loop->index}}]" id="" value="{{$i+1}}" @if(($answer != null && $cl_answers[$loop->index] == $i+1) || ($answer == null && $i == 0)) checked @endif>) @endfor</p>
-                        @endforeach
-                    </div>
-                    @break
-            @endswitch
-            <input type="submit" value="Submit">
-            <input type="hidden" name="question_id" value="{{$question->id}}">
-            @csrf
-        </form>
-    </div>
-    @if($question->level->case_studies()->has('questions')->count() > 0)
-    <div id="cs-number">
-        @foreach($question->level->case_studies()->has('questions')->orderBy('number', 'asc')->get() as $cs)
-        <div>
-            Studi Kasus {{$cs->number}}
-            <p>
-                @foreach($cs->questions()->orderBy('number', 'asc')->get() as $qst)
-                <a href="{{route('user-exam-questions', ['level_id' => $qst->level->id, 'case_study_number' => $qst->case_study->number, 'question_number' => $qst->number])}}">{{$qst->number}}</a> @if(!$loop->last) - @endif
-                @endforeach
-            </p>
+                </div>
+            </div>
         </div>
-        @endforeach
-    </div>
     @endif
-    <div id="non-cs-number">
-        @foreach($question->level->questions()->doesnthave('case_study')->orderBy('number', 'asc')->get() as $q)
-        <a href="{{route('user-exam-questions', ['level_id' => $q->level->id, 'case_study_number' => 0, 'question_number' => $q->number])}}">{{$q->number}}</a> @if(!$loop->last) - @endif
-        @endforeach
-    </div>
-    <div id="finish">
-        <a href="{{route('user-exam-finish', ['level' => $question->level->id])}}">Selesai</a>
+    <div class="row">
+        <div class="col-md-12" id="case-study-section">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Soal {{$question->number}}
+                    </h6>
+                </div>
+                <div class="card-body">
+
+                    {!!$question->body!!}
+                    
+                    <br><br>
+                    <label>Jawaban :</label>
+                    <form action="{{route('user-exam-answer-store')}}" method="post">
+                        @switch($question->answer_type)
+                            @case('MULTIPLE')
+                                @foreach($question->choices()->orderBy('point', 'asc')->get() as $choice)
+                                    <div class="custom-control custom-checkbox ">
+                                        <input type="radio" id="pg{{$choice->point}}" name="mc_answer" class="custom-control-input" value="{{$choice->point}}" @if($answer != null && $answer->point == $choice->point) checked @endif>
+                                        <label class="custom-control-label" for="pg{{$choice->point}}">{{$choice->point}}. {{$choice->body}}</label>
+                                    </div>
+                                @endforeach
+                               
+                                @break
+                
+                            @case('ESSAY')
+                                <div class="form-group">
+                                    <textarea class="form-control" rows="3" name="essay">@if($answer != null) {{$answer->essay}} @endif</textarea>
+                                </div>
+                                @break
+                
+                            @case('CHECKLIST')
+                                @php if($answer != null) $cl_answers = json_decode($answer->checklists); @endphp
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Kompetensi</th>
+                                                <th scope="col" class="text-center">1</th>
+                                                <th scope="col" class="text-center">2</th>
+                                                <th scope="col" class="text-center">3</th>
+                                                <th scope="col" class="text-center">4</th>
+                                                <th scope="col" class="text-center">5</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($question->checklists()->orderBy('id', 'asc')->get() as $checklist)
+                                                <tr>
+                                                    <th scope="row">{{$checklist->body}}</th>
+                                                    @for($i = 0; $i < 5; $i++)
+                                                        <td class="text-center">
+                                                            <div class="custom-control custom-checkbox ">
+                                                                <input type="radio" id="{{$checklist->body}}_{{$i}}" name="cl_answer[{{$loop->index}}]" class="custom-control-input" value="{{$i+1}}" @if(($answer != null && $cl_answers[$loop->index] == $i+1)) checked @endif>
+                                                                <label class="custom-control-label" for="{{$checklist->body}}_{{$i}}"></label>
+                                                            </div>
+                                                        </td>
+                                                    @endfor
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                @break
+                        @endswitch
+                        <div class="text-right">
+                            <input type="submit" class="btn btn-primary" value="Simpan">
+                            <a class="btn btn-success" href="{{route('user-exam-finish', ['level' => $question->level->id])}}">Selesai</a>
+                        </div>
+                        <input type="hidden" name="question_id" value="{{$question->id}}">
+                        @csrf
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
