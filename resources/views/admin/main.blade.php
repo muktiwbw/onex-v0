@@ -61,6 +61,17 @@
 
       <hr class="sidebar-divider d-none d-md-block">
 
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>E-Module</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Wareframe</span></a>
+      </li>
+
     </ul>
 
     <div id="content-wrapper" class="d-flex flex-column">
