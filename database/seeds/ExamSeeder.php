@@ -22,7 +22,7 @@ class ExamSeeder extends Seeder
                 'body' => '<p>Integer non turpis vitae nisl fermentum fermentum eget eu sem. Curabitur tempor, est nec consectetur maximus, neque massa tempor nibh, vel dictum augue orci a urna. Sed sem urna, auctor.</p>',
                 'answer_type' => 'MULTIPLE',
                 'level_id' => 1,
-                'score' => 15,
+                'score' => 1,
                 'choices' => [
                     [
                         'point' => 'a',
@@ -50,7 +50,7 @@ class ExamSeeder extends Seeder
                 'body' => '<p>Mauris consequat feugiat eros. Ut nec mattis purus, eget malesuada enim. Maecenas vehicula semper finibus. Suspendisse risus tellus, elementum a ultrices quis, hendrerit at elit. Suspendisse non dictum tellus, eget.</p>',
                 'answer_type' => 'MULTIPLE',
                 'level_id' => 1,
-                'score' => 15,
+                'score' => 1,
                 'choices' => [
                     [
                         'point' => 'a',
@@ -78,7 +78,7 @@ class ExamSeeder extends Seeder
                 'body' => '<p>Phasellus in velit eget ex varius sodales. Fusce in tortor ac odio posuere convallis. In interdum laoreet rhoncus. Aenean vel lacus sed tortor placerat tempus. Mauris hendrerit ipsum nec vestibulum.</p>',
                 'answer_type' => 'MULTIPLE',
                 'level_id' => 1,
-                'score' => 15,
+                'score' => 1,
                 'choices' => [
                     [
                         'point' => 'a',
@@ -106,7 +106,7 @@ class ExamSeeder extends Seeder
                 'body' => '<p>Morbi quis magna metus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam pulvinar nisl non felis tempor, vel consectetur nisl ultricies. Nam consequat lacus.</p>',
                 'answer_type' => 'MULTIPLE',
                 'level_id' => 1,
-                'score' => 15,
+                'score' => 1,
                 'choices' => [
                     [
                         'point' => 'a',
@@ -134,7 +134,7 @@ class ExamSeeder extends Seeder
                 'body' => '<p>Nam vel nisl ac diam pretium dignissim quis sed tortor. Cras et enim sed felis lacinia vestibulum. Fusce malesuada ac turpis sed luctus. Vestibulum convallis massa nec pretium porttitor. Suspendisse.</p>',
                 'answer_type' => 'MULTIPLE',
                 'level_id' => 1,
-                'score' => 15,
+                'score' => 1,
                 'choices' => [
                     [
                         'point' => 'a',

@@ -78,7 +78,7 @@ class UserController extends Controller
             
             case 'CHECKLIST':
                 foreach($question->checklists()->orderBy('id', 'asc')->get() as $key => $checklist){
-                    $checklists[$key] = isset($request->cl_answer[$key]) && $request->cl_answer[$key] != null ? $request->cl_answer[$key] : null;
+                    $checklists[$key] = isset($request->cl_answer[$key]) && $request->cl_answer[$key] != '0' ? $request->cl_answer[$key] : '0';
                 }
 
                 $fields['checklists'] = json_encode($checklists);
@@ -195,8 +195,15 @@ class UserController extends Controller
                 }            
             }
 
+            $overalNonChecklistScore = Level::find($request->level_id)->questions()->where('answer_type', '<>', 'CHECKLIST')->sum('score');
+            $overalChecklistScore = 0;
+            
+            foreach(Level::find($request->level_id)->questions()->where('answer_type', 'CHECKLIST')->get() as $q){
+                $overalChecklistScore += $q->checklists()->count() * $q->score;
+            }
+
             Report::create([
-                'score' => $totalScore,
+                'score' => $totalScore / ($overalNonChecklistScore + $overalChecklistScore) * 100,
                 'answer_sheet_id' => Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->id
             ]);
         }
