@@ -78,7 +78,7 @@ class UserController extends Controller
             
             case 'CHECKLIST':
                 foreach($question->checklists()->orderBy('id', 'asc')->get() as $key => $checklist){
-                    $checklists[$key] = isset($request->cl_answer[$key]) && $request->cl_answer[$key] != null ? $request->cl_answer[$key] : null;
+                    $checklists[$key] = isset($request->cl_answer[$key]) && $request->cl_answer[$key] != '0' ? $request->cl_answer[$key] : '0';
                 }
 
                 $fields['checklists'] = json_encode($checklists);

@@ -38,7 +38,7 @@
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <h6 class="m-0 font-weight-bold text-success">Jawaban</h6>
-                                                            <p>{{$question->essay}}</p>
+                                                            <p>{{$answer_sheet->answers()->where('question_id', $question->id)->first()->essay}}</p>
                                                         </div>
                                                     </div>
                                                     <div class="row">

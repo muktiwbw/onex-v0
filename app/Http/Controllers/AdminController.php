@@ -56,7 +56,7 @@ class AdminController extends Controller
                     $cl_answers = json_decode($answer->checklists);
 
                     foreach($answer->question->checklists()->orderBy('id', 'asc')->get() as $key => $checklist){
-                        $totalScore += $checklist->answer == $cl_answers[$key] ? $checklist->question->score : 0;
+                        $totalScore += ($checklist->answer == $cl_answers[$key]) || (is_null($checklist->answer) && $cl_answers[$key] == '0') ? $checklist->question->score : 0;
                     }
                     break;
             }            
@@ -95,7 +95,7 @@ class AdminController extends Controller
                     $cl_answers = json_decode($answer->checklists);
 
                     foreach($answer->question->checklists()->orderBy('id', 'asc')->get() as $key => $checklist){
-                        $totalScore += $checklist->answer == $cl_answers[$key] ? $checklist->question->score : 0;
+                        $totalScore += ($checklist->answer == $cl_answers[$key]) || (is_null($checklist->answer) && $cl_answers[$key] == '0') ? $checklist->question->score : 0;
                     }
                     break;
             }            
