@@ -10,6 +10,7 @@ use App\Answer;
 use App\Question;
 use App\Evaluation;
 use App\EvaluationAnswer;
+use App\Report;
 
 class UserController extends Controller
 {
@@ -152,11 +153,10 @@ class UserController extends Controller
     public function show_evaluation($level_id){
         return Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->evaluation_answers()->count() > 0 ? redirect()->route('user-exam-result', ['level_id' => $level_id]) : view('user.evaluation', [
             'level' => Level::find($level_id),
-            ]);
-        }
+        ]);
+    }
         
     public function store_evaluation(Request $request){
-        if(!Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->finished) Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->update(['finished' => true]);
         // Loop based on evaluations di database, bukan dari radio di DOM karena create evaluation answer butuh evaluation id
         // Maka dari itu memastikan urutannya sama dengan orderBy number di method ini maupun di DOM (evaluation.blade.php)
         foreach (Level::find($request->level_id)->evaluations()->orderBy('number', 'asc')->get() as $key => $eval) {
@@ -167,38 +167,46 @@ class UserController extends Controller
             ]);
         }
 
+        if(!Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->finished) Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->update(['finished' => true]);
+
+        if(Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->level->questions()->where('answer_type', 'ESSAY')->count() == 0) {
+            $totalScore = 0;
+
+            foreach(Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->answers()->get() as $answer){
+                switch ($answer->type) {
+                    case 'MULTIPLE':
+                        $totalScore += $answer->question->choices()->where('correct', true)->first()->point == $answer->point ? $answer->question->score : 0;
+                        break;
+                        
+                    case 'CHECKLIST':
+                        $cl_answers = json_decode($answer->checklists);
+
+                        foreach($answer->question->checklists()->orderBy('id', 'asc')->get() as $key => $checklist){
+                            $totalScore += $checklist->answer == $cl_answers[$key] ? $checklist->question->score : 0;
+                        }
+                        break;
+                }            
+            }
+
+            Report::create([
+                'score' => $totalScore,
+                'answer_sheet_id' => Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->id
+            ]);
+        }
+
         return redirect()->route('user-exam-result', ['level_id' => $request->level_id]);
     }
 
     public function show_result($level_id){
-        $totalScore = 0;
-        $answers = Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->answers()->get();
-
-        foreach($answers as $answer){
-            switch ($answer->type) {
-                case 'MULTIPLE':
-                    $totalScore += $answer->question->choices()->where('correct', true)->first()->point == $answer->point ? $answer->question->score : 0;
-                    break;
-                    
-                case 'CHECKLIST':
-                    $cl_answers = json_decode($answer->checklists);
-
-                    foreach($answer->question->checklists()->orderBy('id', 'asc')->get() as $key => $checklist){
-                        $totalScore += $checklist->answer == $cl_answers[$key] ? $checklist->question->score : 0;
-                    }
-                    break;
-            }            
-        }
-
         return view('user.exam_result', [
             'answer_sheet' => Auth::user()->answer_sheets()->where('level_id', $level_id)->first(),
-            'total_score' => $totalScore
         ]);
     }
 
     public function reset_exam($level_id){
         Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->answers()->delete();
         Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->evaluation_answers()->delete();
+        Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->report()->delete();
         Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->delete();
 
         return redirect()->route('user-exam-questions', ['level_id' => $level_id]);

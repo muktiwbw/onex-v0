@@ -11,7 +11,10 @@
     <div id="profile">
         <p>Nama: {{$answer_sheet->user->name}}</p>
         <p>Mulai: {{$answer_sheet->created_at}}</p>
-        <p>Skor Total (Multiple choice & Checklist): {{$total_score}}</p>
+        @if($answer_sheet->report()->count() > 0)
+        <p>Skor Total: {{$answer_sheet->report->score}}</p>
+        <p>Skor Penilaian Diri: {{$answer_sheet->evaluation_answers()->where('answer', true)->count()}}</p>
+        @endif
     </div>
     <div><a href="{{route('user')}}">Kembali</a> - <a href="{{route('user-exam-reset', ['level_id' => $answer_sheet->level->id])}}">Ulangi</a></div>
 </body>

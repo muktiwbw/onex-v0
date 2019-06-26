@@ -9,6 +9,7 @@ use App\Level;
 use App\AnswerSheet;
 use App\Question;
 use App\CaseStudy;
+use App\Report;
 
 class AdminController extends Controller
 {
@@ -44,9 +45,8 @@ class AdminController extends Controller
 
     public function show_result($user_id, $level_id){
         $totalScore = 0;
-        $answers = User::find($user_id)->answer_sheets()->where('level_id', $level_id)->first()->answers()->get();
 
-        foreach($answers as $answer){
+        foreach(User::find($user_id)->answer_sheets()->where('level_id', $level_id)->first()->answers()->get() as $answer){
             switch ($answer->type) {
                 case 'MULTIPLE':
                     $totalScore += $answer->question->choices()->where('correct', true)->first()->point == $answer->point ? $answer->question->score : 0;
@@ -78,7 +78,37 @@ class AdminController extends Controller
     }
 
     public function submit_essay(Request $request){
-        dd($request);
+        $answer_sheet = AnswerSheet::find($request->answer_sheet_id);
+        $totalScore = 0;
+
+        foreach($request->score as $score){
+            $totalScore += $score;
+        }
+
+        foreach(User::find($answer_sheet->user->id)->answer_sheets()->where('level_id', $answer_sheet->level->id)->first()->answers()->get() as $answer){
+            switch ($answer->type) {
+                case 'MULTIPLE':
+                    $totalScore += $answer->question->choices()->where('correct', true)->first()->point == $answer->point ? $answer->question->score : 0;
+                    break;
+                    
+                case 'CHECKLIST':
+                    $cl_answers = json_decode($answer->checklists);
+
+                    foreach($answer->question->checklists()->orderBy('id', 'asc')->get() as $key => $checklist){
+                        $totalScore += $checklist->answer == $cl_answers[$key] ? $checklist->question->score : 0;
+                    }
+                    break;
+            }            
+        }
+        
+        Report::create([
+            'score' => $totalScore,
+            'answer_sheet_id' => $answer_sheet->id
+        ]);
+
+        return redirect()->route('admin-user-result', [
+            'user_id' => $answer_sheet->user->id,
+            'level_id' => $answer_sheet->level->id,
+        ]);
     }
-    
 }
