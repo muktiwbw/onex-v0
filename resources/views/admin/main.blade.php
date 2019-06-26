@@ -62,13 +62,13 @@
       <hr class="sidebar-divider d-none d-md-block">
 
       <li class="nav-item">
-        <a class="nav-link" href="#">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
+        <a class="nav-link" target="_blank" href="/files/pdf/01_modul.pdf">
+          <i class="fas fa-fw fa-book"></i>
           <span>E-Module</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
+        <a class="nav-link" target="_blank" href="/files/pdf/02_wareframe.pdf">
+          <i class="fas fa-fw fa-book"></i>
           <span>Wareframe</span></a>
       </li>
 
