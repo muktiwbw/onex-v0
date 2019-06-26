@@ -65,6 +65,8 @@ class UserController extends Controller
             'question_id' => $question->id,
         ];
 
+        $checklists = [];
+
         switch ($question->answer_type) {
             case 'MULTIPLE':
                 $fields['point'] = $request->mc_answer;
@@ -75,7 +77,11 @@ class UserController extends Controller
                 break;
             
             case 'CHECKLIST':
-                $fields['checklists'] = json_encode($request->cl_answer);
+                foreach($question->checklists()->orderBy('id', 'asc')->get() as $key => $checklist){
+                    $checklists[$key] = isset($request->cl_answer[$key]) && $request->cl_answer[$key] != '0' ? $request->cl_answer[$key] : '0';
+                }
+
+                $fields['checklists'] = json_encode($checklists);
                 break;
         }
 
@@ -92,7 +98,7 @@ class UserController extends Controller
                     break;
                 
                 case 'CHECKLIST':
-                    $answer->checklists = json_encode($request->cl_answer);
+                    $answer->checklists = json_encode($checklists);
                     break;
             }
 
