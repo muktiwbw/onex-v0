@@ -68,5 +68,17 @@ class AdminController extends Controller
             'levels' => Level::all(),
         ]);
     }
+
+    public function check_essay($user_id, $level_id){
+        return view('admin.check_essay', [
+            'levels' => Level::all(),
+            'level' => Level::find($level_id),
+            'answer_sheet' => User::find($user_id)->answer_sheets()->where('level_id', $level_id)->first(),
+        ]);
+    }
+
+    public function submit_essay(Request $request){
+        dd($request);
+    }
     
 }
