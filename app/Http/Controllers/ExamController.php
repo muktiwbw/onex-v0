@@ -124,6 +124,7 @@ class ExamController extends Controller
 
         if($caseStudy->type == 'AUDIO') Storage::disk('real_public')->delete($caseStudy->body);
 
+        $caseStudy->title = $request->cs_title;
         $caseStudy->body = $request->cs_type == 'AUDIO' ? $this->store_audio($request->cs_audio, $caseStudy->level->id, $caseStudy->number) : $request->cs_body;
         $caseStudy->type = $request->cs_type;
         $caseStudy->save();
