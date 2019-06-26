@@ -28,7 +28,7 @@ class UserController extends Controller
     public function show_question($level_id, $case_study_number = null, $question_number = null){
         if(Auth::user()->answer_sheets()->count() == 0 || Auth::user()->answer_sheets()->where('level_id', $level_id)->count() == 0) AnswerSheet::create([
             'user_id' => Auth::id(),
-            'level_id' => $level_id
+            'level_id' => $level_id,
         ]);
 
         if(Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->finished) return redirect()->route('user-exam-result', ['level_id' => $level_id]);
@@ -49,6 +49,7 @@ class UserController extends Controller
         }
 
         return view('user.exam', [
+            'levels' => Level::all(),
             'question' => $question,
             'answer' => Answer::where('answer_sheet_id', Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->id)->where('question_id', $question->id)->count() > 0 ? Answer::where('answer_sheet_id', Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->id)->where('question_id', $question->id)->first() : null,
         ]);
@@ -145,18 +146,17 @@ class UserController extends Controller
     }
 
     public function finish_exam($level_id){
-        if(!Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->finished) Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->update(['finished' => true]);
-
         return Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->evaluation_answers()->count() > 0 ? redirect()->route('user') : redirect()->route('user-exam-evaluation', ['level_id' => $level_id]);
     }
-
+    
     public function show_evaluation($level_id){
         return Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->evaluation_answers()->count() > 0 ? redirect()->route('user-exam-result', ['level_id' => $level_id]) : view('user.evaluation', [
             'level' => Level::find($level_id),
-        ]);
-    }
-
+            ]);
+        }
+        
     public function store_evaluation(Request $request){
+        if(!Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->finished) Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->update(['finished' => true]);
         // Loop based on evaluations di database, bukan dari radio di DOM karena create evaluation answer butuh evaluation id
         // Maka dari itu memastikan urutannya sama dengan orderBy number di method ini maupun di DOM (evaluation.blade.php)
         foreach (Level::find($request->level_id)->evaluations()->orderBy('number', 'asc')->get() as $key => $eval) {
