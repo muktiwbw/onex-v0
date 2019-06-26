@@ -16,6 +16,7 @@
             display: none;
         }
     </style>
+    @yield('head')
 </head>
 <body id="page-top">
 

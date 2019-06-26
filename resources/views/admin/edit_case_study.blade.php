@@ -1,43 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Admin - Edit Studi Kasus</title>
+@extends('admin.main')
+@section('head')
     @if($caseStudy->type == 'TEXT')
-    <style>
-        #cs-audio{
-            display: none;
-        }
-    </style>
+        <style>
+            #cs-audio{
+                display: none;
+            }
+        </style>
     @else
-    <style>
-        #cs-body{
-            display: none;
-        }
-    </style>
+        <style>
+            #cs-body{
+                display: none;
+            }
+        </style>
     @endif
-</head>
-<body>
-    @component('components.navbar')@endcomponent
-    <h1>Edit Studi Kasus</h1>
-    <h2>{{$caseStudy->level->name}}</h2>
-    <div>
-        <form action="{{route('admin-case-study-patch')}}" method="post" enctype="multipart/form-data">
-            <input type="text" name="cs_title" value="{{$caseStudy->title}}" placeholder="Tuliskan judul studi kasus"> <button id="type-switch">Ganti ke @if($caseStudy->type == 'TEXT') Audio @else Text @endif</button>
-            <div id="cs-body">
-                <textarea name="cs_body" cols="30" rows="10">@if($caseStudy->type == 'TEXT') {{$caseStudy->body}} @endif</textarea>
+@endsection
+
+@section('content')
+<h1 class="h3 mb-4 text-gray-800">
+        Edit Studi Kasus
+    </h1>
+    <div class="row">
+        <div class="col-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Level {{$caseStudy->level->name}}
+                    </h6>
+                </div>
+
+                <div class="card-body">
+                    <form action="{{route('admin-case-study-patch')}}" method="post" enctype="multipart/form-data">
+                        <!-- <button id="type-switch">Ganti Audio</button> -->
+                        <div class="text-right mb-0">
+                            <button id="type-switch" class="btn btn-success btn-circle btn-sm text-white">@if($caseStudy->type == 'TEXT') <i class="fas fa-volume-up"></i> @else <i class="fas fa-align-left"></i> @endif</button>
+                        </div>
+                        <div class="form-group">
+                            <label>Judul Studi Kasus</label>
+                            <input class="form-control" type="text" name="cs_title" value="{{$caseStudy->title}}" placeholder="Tuliskan judul studi kasus">
+                        </div>
+                        <div id="cs-body">
+                            <textarea name="cs_body" cols="30" rows="10">@if($caseStudy->type == 'TEXT') {{$caseStudy->body}} @endif</textarea>
+                        </div>
+                        <div id="cs-audio" class="form-group">
+                            <div class="form-group">
+                                <label>Upload Rekaman</label>
+                                <input type="file" class="form-control-file" name="cs_audio">
+                            </div>
+                        </div>
+                        <input id="cs-type" type="hidden" name="cs_type" value="{{$caseStudy->type}}">
+                        <input type="hidden" name="case_study_id" value="{{$caseStudy->id}}">
+                        <input type="hidden" name="level_id" value="{{$caseStudy->level->id}}">
+                        <input type="submit" class="btn btn-primary mt-3" value="Simpan">
+                        @csrf
+                    </form>
+                </div>
             </div>
-            <div id="cs-audio">
-                <input type="file" name="cs_audio">
-            </div>
-            <input type="submit" value="Submit">
-            <input id="cs-type" type="hidden" name="cs_type" value="{{$caseStudy->type}}">
-            <input type="hidden" name="case_study_id" value="{{$caseStudy->id}}">
-            <input type="hidden" name="level_id" value="{{$caseStudy->level->id}}">
-            @csrf
-        </form>
+        </div>
     </div>
     <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
     <script>
@@ -61,17 +79,16 @@
             if(csType.value == 'TEXT'){
                 csType.value = 'AUDIO'
                 this.setAttribute('type', 'audio')
-                this.innerHTML = 'Ganti ke Text'
+                this.innerHTML = '<i class="fas fa-align-left"></i>'
                 csBody.style.display = 'none'
                 csAudio.style.display = 'block'
             }else{
                 csType.value = 'TEXT'
                 this.setAttribute('type', 'text')
-                this.innerHTML = 'Ganti ke Audio'
+                this.innerHTML = '<i class="fas fa-volume-up"></i>'
                 csAudio.style.display = 'none'
                 csBody.style.display = 'block'
             }
         })
     </script>
-</body>
-</html>
+@endsection
