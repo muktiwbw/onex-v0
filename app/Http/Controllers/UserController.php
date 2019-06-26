@@ -195,8 +195,15 @@ class UserController extends Controller
                 }            
             }
 
+            $overalNonChecklistScore = Level::find($request->level_id)->questions()->where('answer_type', '<>', 'CHECKLIST')->sum('score');
+            $overalChecklistScore = 0;
+            
+            foreach(Level::find($request->level_id)->questions()->where('answer_type', 'CHECKLIST')->get() as $q){
+                $overalChecklistScore += $q->checklists()->count() * $q->score;
+            }
+
             Report::create([
-                'score' => $totalScore,
+                'score' => $totalScore / ($overalNonChecklistScore + $overalChecklistScore) * 100,
                 'answer_sheet_id' => Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->id
             ]);
         }

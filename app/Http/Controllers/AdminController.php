@@ -62,9 +62,16 @@ class AdminController extends Controller
             }            
         }
 
+        $overalNonChecklistScore = Level::find($level_id)->questions()->where('answer_type', '<>', 'CHECKLIST')->sum('score');
+        $overalChecklistScore = 0;
+        
+        foreach(Level::find($level_id)->questions()->where('answer_type', 'CHECKLIST')->get() as $q){
+            $overalChecklistScore += $q->checklists()->count() * $q->score;
+        }
+
         return view('admin.show_user_result', [
             'answer_sheet' => User::find($user_id)->answer_sheets()->where('level_id', $level_id)->first(),
-            'total_score' => $totalScore,
+            'total_score' => $totalScore / ($overalNonChecklistScore + $overalChecklistScore) * 100,
             'levels' => Level::all(),
         ]);
     }
@@ -100,9 +107,16 @@ class AdminController extends Controller
                     break;
             }            
         }
+
+        $overalNonChecklistScore = $answer_sheet->level->questions()->where('answer_type', '<>', 'CHECKLIST')->sum('score');
+        $overalChecklistScore = 0;
+
+        foreach($answer_sheet->level->questions()->where('answer_type', 'CHECKLIST')->get() as $q){
+            $overalChecklistScore += $q->checklists()->count() * $q->score;
+        }
         
         Report::create([
-            'score' => $totalScore,
+            'score' => $totalScore / ($overalNonChecklistScore + $overalChecklistScore) * 100,
             'answer_sheet_id' => $answer_sheet->id
         ]);
 
