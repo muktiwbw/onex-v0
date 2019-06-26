@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Exam - {{$question->level->name}}</title>
-</head>
-<body>
-    <!-- $question->case_study gawe ngetokno studi kasus'e soal tsb -->
+@extends('user.main_exam')
+@section('content')
     @if($question->case_study()->count() > 0)
     <div id="case-study-section">
     <h2>Studi Kasus {{$question->case_study->number}}</h2>
@@ -69,5 +61,4 @@
     <div id="finish">
         <a href="{{route('user-exam-finish', ['level' => $question->level->id])}}">Selesai</a>
     </div>
-</body>
-</html>
+@endsection

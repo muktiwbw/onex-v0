@@ -7,13 +7,21 @@ use Auth;
 use App\User;
 use App\Level;
 use App\AnswerSheet;
+use App\Question;
+use App\CaseStudy;
 
 class AdminController extends Controller
 {
     public function index(){
-        return view('admin.main', [
+        return view('admin.dashboard', [
             'user' => Auth::user(),
             'levels' => Level::all(),
+            'participants' => User::whereHas('privilege', function($privilege){
+                $privilege->where('type', 'USER');
+            })->get(),
+            'answer_sheets' => AnswerSheet::where('finished', true),
+            'questions' => Question::all(),
+            'case_studies' => CaseStudy::all(),
         ]);
     }
 
@@ -59,6 +67,18 @@ class AdminController extends Controller
             'total_score' => $totalScore,
             'levels' => Level::all(),
         ]);
+    }
+
+    public function check_essay($user_id, $level_id){
+        return view('admin.check_essay', [
+            'levels' => Level::all(),
+            'level' => Level::find($level_id),
+            'answer_sheet' => User::find($user_id)->answer_sheets()->where('level_id', $level_id)->first(),
+        ]);
+    }
+
+    public function submit_essay(Request $request){
+        dd($request);
     }
     
 }
