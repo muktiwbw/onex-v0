@@ -1,20 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>User - {{$user->name}}</title>
-</head>
-<body>
-    @component('components.navbar')@endcomponent
-    <h1>User - {{$user->name}}</h1>
-    <h2>Level yang sudah dikerjakan</h2>
-    <div>
+@extends('admin.main')
+@section('content')
+    <h1 class="h3 mb-4 text-gray-800">
+        Level yang Sudah Dikerjakan
+    </h1>
+    <h4 class="h3 mb-4 text-gray-800 text-center">
+        {{$user->name}}
+    </h4>
+    <div class="row">
+
         @php $id = $user->id; @endphp
         @foreach($answer_sheets as $answer_sheet)
-        <p><a href="{{route('admin-user-result', ['user_id' => $user->id, 'level_id' => $answer_sheet->level->id])}}">Level {{$answer_sheet->level->name}}</a></p>
+            <div class="col-xl-3 col-md-4 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Level</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <a href="{{route('admin-user-result', ['user_id' => $user->id, 'level_id' => $answer_sheet->level->id])}}">Level {{$answer_sheet->level->name}}</a>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         @endforeach
+
     </div>
-</body>
-</html>
+@endsection
