@@ -57,12 +57,12 @@
       <li class="nav-item">
         <a class="nav-link" target="_blank" href="/files/pdf/01_modul.pdf">
           <i class="fas fa-fw fa-book"></i>
-          <span>E-Module</span></a>
+          <span>Kamus Kompetensi</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" target="_blank" href="/files/pdf/02_wareframe.pdf">
           <i class="fas fa-fw fa-book"></i>
-          <span>Wareframe</span></a>
+          <span>Format Penilaian</span></a>
       </li>
 
     </ul>
