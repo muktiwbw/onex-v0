@@ -21,7 +21,7 @@
 
   <div id="wrapper">
 
-    <ul class="navbar-nav bg-gradient-danger sidebar sidebar-dark accordion" id="accordionSidebar">
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
         <div class="sidebar-brand-text mx-3">E-Modul BBI</div>
@@ -160,11 +160,6 @@
   <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
   <script src="{{ asset('js/datatables-main.js') }}"></script>
 
-</body>
-
-<body>
-
-    
 </body>
 
 </html>
