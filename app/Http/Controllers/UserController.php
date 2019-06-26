@@ -201,6 +201,7 @@ class UserController extends Controller
     public function show_result($level_id){
         return view('user.exam_result', [
             'answer_sheet' => Auth::user()->answer_sheets()->where('level_id', $level_id)->first(),
+            'levels' => Level::all(),
         ]);
     }
 

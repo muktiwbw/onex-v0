@@ -1,7 +1,7 @@
 @extends('user.main_exam')
 @section('content')
     <h1 class="h3 mb-4 text-gray-800">
-        {{$level->name}} - Penilaian Diri
+        Penilaian Diri
     </h1>
     <div class="row">
         <div class="col-md-6" id="case-study-section">
