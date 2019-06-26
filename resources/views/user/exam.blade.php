@@ -15,7 +15,14 @@
                     <!-- Card Content - Collapse -->
                     <div class="collapse show" id="study{{$question->case_study->id}}">
                         <div class="card-body">
-                            {!!$question->case_study->body!!}
+                            @if($question->case_study->type == 'TEXT')
+                                {!!$question->case_study->body!!}
+                            @else
+                                <audio controls>
+                                    <source src="{{ URL::to('/') }}/files/{!!$question->case_study->body!!}" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            @endif
                         </div>
                     </div>
                 </div>

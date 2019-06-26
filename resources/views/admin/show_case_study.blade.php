@@ -20,7 +20,14 @@
                 </div>
 
                 <div class="card-body">
-                    {!!$caseStudy->body!!}
+                    @if($caseStudy->type == 'TEXT')
+                        {!!$caseStudy->body!!}
+                    @else
+                        <audio controls>
+                            <source src="{{ URL::to('/') }}/files/{!!$caseStudy->body!!}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    @endif
                 </div>
             </div>
         </div>
