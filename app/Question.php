@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Question extends Model
 {
     protected $fillable = [
-        'number', 'body', 'answer_type', 'essay', 'level_id', 'case_study_id',
+        'number', 'body', 'answer_type', 'essay', 'score', 'level_id', 'case_study_id',
     ];
     
     public function choices(){
@@ -24,5 +24,9 @@ class Question extends Model
 
     public function case_study(){
         return $this->belongsTo('App\CaseStudy');
+    }
+
+    public function answers(){
+        return $this->hasMany('App\Answer');
     }
 }

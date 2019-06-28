@@ -9,6 +9,7 @@ use App\Choice;
 use App\CaseStudy;
 use App\Checklist;
 use App\Evaluation;
+use App\User;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,18 +17,39 @@ class ExamController extends Controller
 {    
     public function index(){
         return view('admin.exams', [
-            'levels' => Level::all()
+            'levels' => Level::all(),
+            'users' => User::whereHas('privilege', function($privilege){
+                $privilege->where('type', 'USER');
+            })->get(),
         ]);
     }
 
     public function show_level($level_id){
         return view('admin.level', [
             'level' => Level::find($level_id),
+            'levels' => Level::all(),
         ]);
+    }
+
+    public function config_level($level_id){
+        return view('admin.edit_level_config', [
+            'level' => Level::find($level_id),
+            'levels' => Level::all(),
+        ]);
+    }
+
+    public function patch_config_level(Request $request){
+        Level::find($request->level_id)->update([
+            'exam_threshold' => $request->exam,
+            'evaluation_threshold' => $request->evaluation,
+        ]);
+
+        return redirect()->route('admin-level-config', ['level_id' => $request->level_id]);
     }
      
     public function create_tujuan($level_id){
         return view('admin.create_tujuan', [
+            'levels' => Level::all(),
             'level' => Level::find($level_id)
         ]);
     }
@@ -42,6 +64,7 @@ class ExamController extends Controller
      
     public function create_uraian($level_id){
         return view('admin.create_uraian', [
+            'levels' => Level::all(),
             'level' => Level::find($level_id)
         ]);
     }
@@ -56,6 +79,7 @@ class ExamController extends Controller
 
     public function create_case_study($level_id){
         return view('admin.create_case_study', [
+            'levels' => Level::all(),
             'level' => Level::find($level_id)
         ]);
     }
@@ -83,12 +107,14 @@ class ExamController extends Controller
 
     public function show_case_study($id){
         return view('admin.show_case_study', [
+            'levels' => Level::all(),
             'caseStudy' => CaseStudy::find($id)
         ]);
     }
 
     public function edit_case_study($id){
         return view('admin.edit_case_study', [
+            'levels' => Level::all(),
             'caseStudy' => CaseStudy::find($id)
         ]);
     }
@@ -98,6 +124,7 @@ class ExamController extends Controller
 
         if($caseStudy->type == 'AUDIO') Storage::disk('real_public')->delete($caseStudy->body);
 
+        $caseStudy->title = $request->cs_title;
         $caseStudy->body = $request->cs_type == 'AUDIO' ? $this->store_audio($request->cs_audio, $caseStudy->level->id, $caseStudy->number) : $request->cs_body;
         $caseStudy->type = $request->cs_type;
         $caseStudy->save();
@@ -134,6 +161,7 @@ class ExamController extends Controller
 
     public function show_question($question_id){
         return view('admin.show_question', [
+            'levels' => Level::all(),
             'question' => Question::find($question_id)
         ]);
     }
@@ -143,6 +171,7 @@ class ExamController extends Controller
         $caseStudies = CaseStudy::where('level_id', $level->id)->get();
 
         return view('admin.create_question', [
+            'levels' => Level::all(),
             'level' => $level,
             'caseStudies' => $caseStudies
         ]);
@@ -180,6 +209,7 @@ class ExamController extends Controller
 
     public function edit_question($id){
         return view('admin.edit_question', [
+            'levels' => Level::all(),
             'question' => Question::find($id)
         ]);
     }
@@ -316,6 +346,7 @@ class ExamController extends Controller
     
     public function create_evaluation($level_id){
         return view('admin.create_evaluation', [
+            'levels' => Level::all(),
             'level' => Level::find($level_id)
         ]);
     }
@@ -334,6 +365,7 @@ class ExamController extends Controller
     
     public function edit_evaluation($level_id){
         return view('admin.edit_evaluation', [
+            'levels' => Level::all(),
             'level' => Level::find($level_id)
         ]);
     }
@@ -363,5 +395,33 @@ class ExamController extends Controller
         }
 
         return redirect()->route('admin-level', ['level_id' => $level_id]);
+    }
+
+    public function edit_question_score($level_id){
+        return view('admin.edit_question_score', [
+            'levels' => Level::all(),
+            'level' => Level::find($level_id)
+        ]);
+    }
+
+    public function patch_question_score(Request $request){
+        $questions = [];
+
+        foreach (Level::find($request->level_id)->case_studies()->has('questions')->orderBy('number', 'asc')->get() as $cs) {
+            foreach($cs->questions()->orderBy('number', 'asc')->get() as $question){
+                $questions[] = $question;
+            }
+        }
+
+        foreach(Level::find($request->level_id)->questions()->doesnthave('case_study')->orderBy('number', 'asc')->get() as $question){
+            $questions[] = $question;
+        }
+
+        foreach($questions as $key => $question){
+            $question->score = $request->question[$key];
+            $question->save();
+        }
+
+        return redirect()->route('admin-level', ['level_id' => $request->level_id]);
     }
 }

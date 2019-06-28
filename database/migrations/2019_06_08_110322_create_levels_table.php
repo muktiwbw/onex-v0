@@ -18,6 +18,8 @@ class CreateLevelsTable extends Migration
             $table->string('name');
             $table->text('tujuan')->nullable();
             $table->text('uraian')->nullable();
+            $table->unsignedSmallInteger('exam_threshold')->nullable();
+            $table->unsignedSmallInteger('evaluation_threshold')->nullable();
             $table->timestamps();
         });
     }

@@ -25,4 +25,8 @@ class AnswerSheet extends Model
     public function evaluation_answers(){
         return $this->hasMany('App\EvaluationAnswer');
     }
+
+    public function report(){
+        return $this->hasOne('App\Report');
+    }
 }
