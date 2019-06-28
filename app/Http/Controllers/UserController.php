@@ -21,6 +21,8 @@ class UserController extends Controller
     }
 
     public function show_question($level_id, $case_study_number = null, $question_number = null){
+        return redirect()->route('user');
+
         $question;
 
         if ($case_study_number && $question_number) {

@@ -7,6 +7,6 @@
     <title>Exam - {{$question->level->name}}</title>
 </head>
 <body>
-    
+    @component('components.navbar-user')@endcomponent
 </body>
 </html>

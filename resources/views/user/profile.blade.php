@@ -7,6 +7,7 @@
     <title>{{$user->name}} - Profile</title>
 </head>
 <body>
+    @component('components.navbar-user')@endcomponent
     <h1>Welcome, {{$user->name}}!</h1>
     <h2>Daftar Test</h2>
     <ul>
