@@ -3,13 +3,51 @@
     <h1 class="h3 mb-4 text-gray-800">
         {{$question->level->name}}
     </h1>
+    @if($question->level->tujuan)
+        <div class="row">
+            <div class="col-md-12" id="case-target-section">
+                <!-- Collapsable Card Example -->
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Accordion -->
+                    <a href="#tujuan" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="tujuan">
+                        <h6 class="m-0 font-weight-bold text-primary">Tujuan Pembelajaran</h6>
+                    </a>
+                    <!-- Card Content - Collapse -->
+                    <div class="collapse show" id="tujuan">
+                        <div class="card-body">
+                            {!!$question->level->tujuan!!}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+    @if($question->level->uraian)
+        <div class="row">
+            <div class="col-md-12" id="case-explain-section">
+                <!-- Collapsable Card Example -->
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Accordion -->
+                    <a href="#uraian" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="uraian">
+                        <h6 class="m-0 font-weight-bold text-primary">Uraian Materi</h6>
+                    </a>
+                    <!-- Card Content - Collapse -->
+                    <div class="collapse show" id="uraian">
+                        <div class="card-body">
+                            {!!$question->level->uraian!!}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
     @if($question->case_study()->count() > 0)
         <div class="row">
             <div class="col-md-12" id="case-study-section">
                 <!-- Collapsable Card Example -->
                 <div class="card shadow mb-4">
                     <!-- Card Header - Accordion -->
-                    <a href="#study{{$question->case_study->id}}" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="study{{$question->case_study->id}}">
+                    <a href="#study{{$question->case_study->id}}" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="study{{$question->case_study->id}}">
                         <h6 class="m-0 font-weight-bold text-primary">Studi Kasus - {{$question->case_study->number}}</h6>
                     </a>
                     <!-- Card Content - Collapse -->
