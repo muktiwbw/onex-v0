@@ -254,4 +254,11 @@ class UserController extends Controller
             'levels' => Level::all(),
         ]);
     }
+
+    public function show_form_penilaian()
+    {
+        return view('user.form', [
+            'levels' => Level::all(),
+        ]);
+    }
 }

@@ -6,7 +6,7 @@
         <div class="col">
             <div class="card shadow mb-4">
                 <div class="card-body">
-                    <a href="#" class="btn btn-success btn-sm text-white mb-4" title="Buat Penilaian"><i class="fas fa-plus"></i> Tambah Penilaian</a>
+                    <a href="{{ route('form-penilaian') }}" class="btn btn-success btn-sm text-white mb-4" title="Buat Penilaian"><i class="fas fa-plus"></i> Tambah Penilaian</a>
                     <div class="table-responsive">
                         <table class="table table-bordered" id="dataTable_applicants" width="100%" cellspacing="0">
                             <thead>
