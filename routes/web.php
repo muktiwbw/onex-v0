@@ -124,4 +124,8 @@ Route::prefix('/user')->middleware('auth', 'user')->group(function(){
     Route::post('/exam/answer/submit', 'UserController@store_answer')->name('user-exam-answer-store');
     // Submit evaluation to DB
     Route::post('/exam/evaluation/submit', 'UserController@store_evaluation')->name('user-exam-evaluation-store');
+    //show list form nilai applicants
+    Route::get('/applicants', 'UserController@show_list_form')->name('list-applicants');
+    //show lform penilaian applicants
+    Route::get('/applicants/new', 'UserController@show_form_penilaian')->name('form-penilaian');
 });

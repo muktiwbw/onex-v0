@@ -283,4 +283,18 @@ class UserController extends Controller
 
         return redirect()->route('user-exam-questions', ['level_id' => $level_id]);
     }
+
+    public function show_list_form()
+    {
+        return view('user.form_list', [
+            'levels' => Level::all(),
+        ]);
+    }
+
+    public function show_form_penilaian()
+    {
+        return view('user.form', [
+            'levels' => Level::all(),
+        ]);
+    }
 }
