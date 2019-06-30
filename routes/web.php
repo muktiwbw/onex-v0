@@ -126,4 +126,10 @@ Route::prefix('/user')->middleware('auth', 'user')->group(function(){
     Route::get('/applicants/new', 'UserController@show_form_penilaian')->name('form-penilaian');
     //submit lform penilaian applicants
     Route::post('/applicants/new/create', 'UserController@submit_applicant')->name('form-penilaian-create');
+    //show lform penilaian applicants
+    Route::get('/applicants/view/{interview_form_id}', function($interview_form_id){
+        return view('user.form_applicant', [
+            'form' => Auth::user()->interview_forms()->find($interview_form_id)
+        ]);
+    })->name('form-penilaian-view');
 });

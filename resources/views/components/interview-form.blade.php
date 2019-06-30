@@ -48,7 +48,7 @@
 
     </div>
     <div class="col-md-8">
-    <h3>Perimbangan Hasil Wawancara</h3>
+    <h3>Pertimbangan Hasil Wawancara</h3>
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
                 <thead>

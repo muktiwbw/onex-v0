@@ -29,7 +29,7 @@
                                     <th>{{$form->unit}}</th>
                                     <th>{{$form->position}}</th>
                                     <th>{{$form->date_of_interview}}</th>
-                                    <th><a href="#">Print Data</a></th>
+                                    <th><a href="{{route('form-penilaian-view', ['interview_form_id' => $form->id])}}">Print Data</a></th>
                                 </tr>
                                 @endforeach
                             </tbody>
