@@ -11,6 +11,8 @@ use App\Question;
 use App\Evaluation;
 use App\EvaluationAnswer;
 use App\Report;
+use App\InterviewForm;
+use App\Competency;
 
 class UserController extends Controller
 {
@@ -83,6 +85,9 @@ class UserController extends Controller
 
                 $fields['checklists'] = json_encode($checklists);
                 break;
+            
+            case 'FORM':
+                break;
         }
 
         if(Answer::where('answer_sheet_id', $fields['answer_sheet_id'])->where('question_id', $fields['question_id'])->count() > 0){
@@ -104,7 +109,23 @@ class UserController extends Controller
 
             $answer->save();
         }else{
-            Answer::create($fields);
+            $newAnswer = Answer::create($fields);
+
+            if($question->answer_type == 'FORM'){
+                InterviewForm::create([
+                    'full_name' => $request->full_name,
+                    'date_of_birth' => $request->date_of_birth,
+                    'education' => $request->education,
+                    'unit' => $request->unit,
+                    'position' => $request->position,
+                    'interviewer' => $request->interviewer,
+                    'date_of_interview' => $request->date_of_interview,
+                    'result' => $request->result,
+                    'type' => $request->type,
+                    'user_id' => Auth::id(),
+                    'answer_id' => $newAnswer->id,
+                ]);
+            }
         }
         
         $case_study_number;

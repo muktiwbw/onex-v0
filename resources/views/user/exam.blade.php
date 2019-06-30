@@ -131,6 +131,11 @@
                                     </table>
                                 </div>
                                 @break
+
+                            @case('FORM')
+                                @component('components.interview-form')@endcomponent
+                                <input type="hidden" name="interview_type" value="SIMULATION">
+                                @break
                         @endswitch
                         <div class="text-right">
                             <input type="submit" class="btn btn-primary" value="Simpan">

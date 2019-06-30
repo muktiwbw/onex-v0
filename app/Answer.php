@@ -17,4 +17,8 @@ class Answer extends Model
     public function question(){
         return $this->belongsTo('App\Question');
     }
+
+    public function interview_form(){
+        return $this->hasOne('App\InterviewForm');
+    }
 }

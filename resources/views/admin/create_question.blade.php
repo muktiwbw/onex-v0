@@ -30,11 +30,12 @@
                         <textarea id="question-body" name="question_body" cols="30" rows="10" placeholder="Fill the question body here!"></textarea>
 
                         <div id="case-study-section" class="form-group mt-3">
-                            <label>Pilih Studi Kasus</label>
+                            <label>Pilih Tipe Soal</label>
                             <select name="answer_type" id="answer-type-dropdown" class="form-control">
                                 <option value="MULTIPLE" selected>Multiple Choice</option>
                                 <option value="ESSAY">Essay</option>
                                 <option value="CHECKLIST">Checklist</option>
+                                <option value="FORM">Form Interview</option>
                             </select>
                         </div>
 
