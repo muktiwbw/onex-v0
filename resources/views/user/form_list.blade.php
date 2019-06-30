@@ -21,15 +21,17 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach(Auth::user()->interview_forms()->where('type', 'REAL')->orderBy('created_at', 'desc')->get() as $form)
                                 <tr>
-                                    <th>Fathur Rachman Saputro</th>
-                                    <th>20 desember 1888</th>
+                                    <th>{{$form->full_name}}</th>
+                                    <th>{{$form->date_of_birth}}</th>
                                     <!-- <th>No. Hp</th> -->
-                                    <th>Staff</th>
-                                    <th>Web Developer</th>
-                                    <th>15-03-2020</th>
+                                    <th>{{$form->unit}}</th>
+                                    <th>{{$form->position}}</th>
+                                    <th>{{$form->date_of_interview}}</th>
                                     <th><a href="#">Print Data</a></th>
                                 </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

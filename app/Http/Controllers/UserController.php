@@ -312,4 +312,32 @@ class UserController extends Controller
             'levels' => Level::all(),
         ]);
     }
+
+    public function submit_applicant(Request $request){
+        $interviewForm = InterviewForm::create([
+            'full_name' => $request->full_name,
+            'date_of_birth' => $request->date_of_birth,
+            'education' => $request->education,
+            'unit' => $request->unit,
+            'position' => $request->position,
+            'interviewer' => $request->interviewer,
+            'date_of_interview' => $request->date_of_interview,
+            'result' => $request->result,
+            'type' => 'REAL',
+            'user_id' => Auth::id(),
+        ]);
+
+        foreach ($request->competency as $key => $competency) {
+            if(!is_null($competency) && !is_null($request->score[$key]) && !is_null($request->evidence[$key])){
+                Competency::create([
+                    'competency' => $competency,
+                    'score' => $request->score[$key],
+                    'evidence' => $request->evidence[$key],
+                    'interview_form_id' => $interviewForm->id,
+                ]);
+            }
+        }
+
+        return redirect()->route('list-applicants');
+    }
 }

@@ -53,6 +53,14 @@
       </li>
 
       <hr class="sidebar-divider d-none d-md-block">
+      
+      <li class="nav-item">
+        <a class="nav-link" href="{{route('list-applicants')}}">
+          <i class="fas fa-fw fa-user"></i>
+          <span>Daftar Pelamar</span></a>
+      </li>
+
+      <hr class="sidebar-divider d-none d-md-block">
 
       <li class="nav-item">
         <a class="nav-link" target="_blank" href="/files/pdf/Kamus_kompetensi.pdf">

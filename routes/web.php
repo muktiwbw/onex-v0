@@ -124,4 +124,6 @@ Route::prefix('/user')->middleware('auth', 'user')->group(function(){
     Route::get('/applicants', 'UserController@show_list_form')->name('list-applicants');
     //show lform penilaian applicants
     Route::get('/applicants/new', 'UserController@show_form_penilaian')->name('form-penilaian');
+    //submit lform penilaian applicants
+    Route::post('/applicants/new/create', 'UserController@submit_applicant')->name('form-penilaian-create');
 });
