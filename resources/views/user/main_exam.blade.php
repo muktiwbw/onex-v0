@@ -60,7 +60,7 @@
           <span>Kamus Kompetensi</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" target="_blank" href="/files/pdf/02_wareframe.pdf">
+        <a class="nav-link" target="_blank" href="{{route('list-applicants')}}">
           <i class="fas fa-fw fa-book"></i>
           <span>Formulir Penilaian</span></a>
       </li>
