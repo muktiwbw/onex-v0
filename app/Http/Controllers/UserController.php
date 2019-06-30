@@ -122,11 +122,23 @@ class UserController extends Controller
                 $interviewForm->result = $request->result;
                 $interviewForm->save();
 
-                foreach ($interviewForm->competencies as $key => $competency) {
-                    $competency->competency = $request->competency[$key];
-                    $competency->score = $request->score[$key];
-                    $competency->evidence = $request->evidence[$key];
-                    $competency->save();
+                foreach ($request->competency as $key => $competency) {
+                    if(!is_null($competency) && !is_null($request->score[$key]) && !is_null($request->evidence[$key])){
+                        if($key < $interviewForm->competencies()->count()){
+                            $comp = $interviewForm->competencies[$key];
+                            $comp->competency = $request->competency[$key];
+                            $comp->score = $request->score[$key];
+                            $comp->evidence = $request->evidence[$key];
+                            $comp->save();
+                        }else{
+                            Competency::create([
+                                'competency' => $request->competency[$key],
+                                'score' => $request->score[$key],
+                                'evidence' => $request->evidence[$key],
+                                'interview_form_id' => $interviewForm->id,
+                            ]);
+                        }
+                    }
                 }
             }
         }else{
@@ -272,10 +284,13 @@ class UserController extends Controller
     }
 
     public function reset_exam($level_id){
-        foreach (Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->answers as $answer) {
-            $answer->interview_form->competencies()->delete();
-            $answer->interview_form->delete();
+        if(Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->answers()->where('type', 'FORM')->count() > 0){
+            foreach (Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->answers()->where('type', 'FORM')->get() as $answer) {
+                $answer->interview_form->competencies()->delete();
+                $answer->interview_form->delete();
+            }
         }
+        
         Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->answers()->delete();
         Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->evaluation_answers()->delete();
         Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->report()->delete();
