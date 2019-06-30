@@ -71,7 +71,7 @@ class AdminController extends Controller
 
         return view('admin.show_user_result', [
             'answer_sheet' => User::find($user_id)->answer_sheets()->where('level_id', $level_id)->first(),
-            'total_score' => User::find($user_id)->answer_sheets()->where('level_id', $level_id)->first()->answers()->whereIn('type', ['MULTIPLE', 'CHECKLIST'])->count() > 0 ? $totalScore / ($overalNonChecklistScore + $overalChecklistScore) * 100 : 0,
+            'total_score' => $totalScore / ($overalNonChecklistScore + $overalChecklistScore) * 100,
             'levels' => Level::all(),
         ]);
     }
@@ -131,6 +131,48 @@ class AdminController extends Controller
             'levels' => Level::all(),
             'level' => Level::find($level_id),
             'answer_sheet' => User::find($user_id)->answer_sheets()->where('level_id', $level_id)->first(),
+        ]);
+    }
+
+    public function submit_form(Request $request){
+        $answer_sheet = AnswerSheet::find($request->answer_sheet_id);
+        $totalScore = 0;
+
+        foreach($request->question_score as $score){
+            $totalScore += $score;
+        }
+
+        foreach(User::find($answer_sheet->user->id)->answer_sheets()->where('level_id', $answer_sheet->level->id)->first()->answers()->get() as $answer){
+            switch ($answer->type) {
+                case 'MULTIPLE':
+                    $totalScore += $answer->question->choices()->where('correct', true)->first()->point == $answer->point ? $answer->question->score : 0;
+                    break;
+                    
+                case 'CHECKLIST':
+                    $cl_answers = json_decode($answer->checklists);
+
+                    foreach($answer->question->checklists()->orderBy('id', 'asc')->get() as $key => $checklist){
+                        $totalScore += ($checklist->answer == $cl_answers[$key]) || (is_null($checklist->answer) && $cl_answers[$key] == '0') ? $checklist->question->score : 0;
+                    }
+                    break;
+            }            
+        }
+
+        $overalNonChecklistScore = $answer_sheet->level->questions()->where('answer_type', '<>', 'CHECKLIST')->sum('score');
+        $overalChecklistScore = 0;
+
+        foreach($answer_sheet->level->questions()->where('answer_type', 'CHECKLIST')->get() as $q){
+            $overalChecklistScore += $q->checklists()->count() * $q->score;
+        }
+
+        Report::create([
+            'score' => $totalScore / ($overalNonChecklistScore + $overalChecklistScore) * 100,
+            'answer_sheet_id' => $answer_sheet->id
+        ]);
+
+        return redirect()->route('admin-user-result', [
+            'user_id' => $answer_sheet->user->id,
+            'level_id' => $answer_sheet->level->id,
         ]);
     }
 }

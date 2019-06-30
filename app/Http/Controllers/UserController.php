@@ -92,22 +92,43 @@ class UserController extends Controller
 
         if(Answer::where('answer_sheet_id', $fields['answer_sheet_id'])->where('question_id', $fields['question_id'])->count() > 0){
             $answer = Answer::where('answer_sheet_id', $fields['answer_sheet_id'])->where('question_id', $fields['question_id'])->first();
-
-            switch ($answer->type) {
-                case 'MULTIPLE':
-                    $answer->point = $request->mc_answer;
-                    break;
+            
+            if($answer->type != 'FORM'){
+    
+                switch ($answer->type) {
+                    case 'MULTIPLE':
+                        $answer->point = $request->mc_answer;
+                        break;
+                        
+                    case 'ESSAY':
+                        $answer->essay = $request->essay;
+                        break;
                     
-                case 'ESSAY':
-                    $answer->essay = $request->essay;
-                    break;
-                
-                case 'CHECKLIST':
-                    $answer->checklists = json_encode($checklists);
-                    break;
-            }
+                    case 'CHECKLIST':
+                        $answer->checklists = json_encode($checklists);
+                        break;
+                }
+    
+                $answer->save();
+            }else{
+                $interviewForm = $answer->interview_form;
+                $interviewForm->full_name = $request->full_name;
+                $interviewForm->date_of_birth = $request->date_of_birth;
+                $interviewForm->education = $request->education;
+                $interviewForm->unit = $request->unit;
+                $interviewForm->position = $request->position;
+                $interviewForm->interviewer = $request->interviewer;
+                $interviewForm->date_of_interview = $request->date_of_interview;
+                $interviewForm->result = $request->result;
+                $interviewForm->save();
 
-            $answer->save();
+                foreach ($interviewForm->competencies as $key => $competency) {
+                    $competency->competency = $request->competency[$key];
+                    $competency->score = $request->score[$key];
+                    $competency->evidence = $request->evidence[$key];
+                    $competency->save();
+                }
+            }
         }else{
             $newAnswer = Answer::create($fields);
 
@@ -251,6 +272,10 @@ class UserController extends Controller
     }
 
     public function reset_exam($level_id){
+        foreach (Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->answers as $answer) {
+            $answer->interview_form->competencies()->delete();
+            $answer->interview_form->delete();
+        }
         Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->answers()->delete();
         Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->evaluation_answers()->delete();
         Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->report()->delete();

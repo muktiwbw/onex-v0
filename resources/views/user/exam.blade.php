@@ -133,7 +133,18 @@
                                 @break
 
                             @case('FORM')
-                                @component('components.interview-form')@endcomponent
+                                @component('components.interview-form', [
+                                    'answer' => is_null($answer) ? null : [
+                                        'full_name' => $answer->interview_form->full_name,
+                                        'date_of_birth' => $answer->interview_form->date_of_birth,
+                                        'education' => $answer->interview_form->education,
+                                        'unit' => $answer->interview_form->unit,
+                                        'position' => $answer->interview_form->position,
+                                        'date_of_interview' => $answer->interview_form->date_of_interview,
+                                        'result' => $answer->interview_form->result,
+                                        'competencies' => $answer->interview_form->competencies,
+                                    ]
+                                ])@endcomponent
                                 <input type="hidden" name="interview_type" value="SIMULATION">
                                 @break
                         @endswitch

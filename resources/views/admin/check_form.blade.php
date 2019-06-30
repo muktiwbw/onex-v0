@@ -47,15 +47,17 @@
                                                             <h6 class="m-0 font-weight-bold text-success">Jawaban</h6>
                                                             <div>
                                                                 @component('components.interview-form', [
-                                                                    'full_name' => $question->answers()->where('answer_sheet_id', $answer_sheet->id)->first()->interview_form->full_name,
-                                                                    'date_of_birth' => $question->answers()->where('answer_sheet_id', $answer_sheet->id)->first()->interview_form->date_of_birth,
-                                                                    'education' => $question->answers()->where('answer_sheet_id', $answer_sheet->id)->first()->interview_form->education,
-                                                                    'unit' => $question->answers()->where('answer_sheet_id', $answer_sheet->id)->first()->interview_form->unit,
-                                                                    'position' => $question->answers()->where('answer_sheet_id', $answer_sheet->id)->first()->interview_form->position,
-                                                                    'interviewer' => $question->answers()->where('answer_sheet_id', $answer_sheet->id)->first()->interview_form->interviewer,
-                                                                    'date_of_interview' => $question->answers()->where('answer_sheet_id', $answer_sheet->id)->first()->interview_form->date_of_interview,
-                                                                    'result' => $question->answers()->where('answer_sheet_id', $answer_sheet->id)->first()->interview_form->result,
-                                                                    'competencies' => $question->answers()->where('answer_sheet_id', $answer_sheet->id)->first()->interview_form->competencies
+                                                                    'answer' => [
+                                                                        'full_name' => $question->answers()->where('answer_sheet_id', $answer_sheet->id)->first()->interview_form->full_name,
+                                                                        'date_of_birth' => $question->answers()->where('answer_sheet_id', $answer_sheet->id)->first()->interview_form->date_of_birth,
+                                                                        'education' => $question->answers()->where('answer_sheet_id', $answer_sheet->id)->first()->interview_form->education,
+                                                                        'unit' => $question->answers()->where('answer_sheet_id', $answer_sheet->id)->first()->interview_form->unit,
+                                                                        'position' => $question->answers()->where('answer_sheet_id', $answer_sheet->id)->first()->interview_form->position,
+                                                                        'interviewer' => $question->answers()->where('answer_sheet_id', $answer_sheet->id)->first()->interview_form->interviewer,
+                                                                        'date_of_interview' => $question->answers()->where('answer_sheet_id', $answer_sheet->id)->first()->interview_form->date_of_interview,
+                                                                        'result' => $question->answers()->where('answer_sheet_id', $answer_sheet->id)->first()->interview_form->result,
+                                                                        'competencies' => $question->answers()->where('answer_sheet_id', $answer_sheet->id)->first()->interview_form->competencies
+                                                                    ]
                                                                 ])
                                                                 @endcomponent
                                                             </div>
@@ -63,7 +65,7 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            Score: <input type="number" name="score[]" min="0" max="{{$question->score}}" value="{{$question->score}}">
+                                                            Score: <input type="number" name="question_score[]" min="0" max="{{$question->score}}" value="{{$question->score}}">
                                                         </div>
                                                     </div>
                                                 </div>
