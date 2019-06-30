@@ -112,7 +112,7 @@ class UserController extends Controller
             $newAnswer = Answer::create($fields);
 
             if($question->answer_type == 'FORM'){
-                InterviewForm::create([
+                $interviewForm = InterviewForm::create([
                     'full_name' => $request->full_name,
                     'date_of_birth' => $request->date_of_birth,
                     'education' => $request->education,
@@ -121,10 +121,21 @@ class UserController extends Controller
                     'interviewer' => $request->interviewer,
                     'date_of_interview' => $request->date_of_interview,
                     'result' => $request->result,
-                    'type' => $request->type,
+                    'type' => $request->interview_type,
                     'user_id' => Auth::id(),
                     'answer_id' => $newAnswer->id,
                 ]);
+
+                foreach ($request->competency as $key => $competency) {
+                    if(!is_null($competency) && !is_null($request->score[$key]) && !is_null($request->evidence[$key])){
+                        Competency::create([
+                            'competency' => $competency,
+                            'score' => $request->score[$key],
+                            'evidence' => $request->evidence[$key],
+                            'interview_form_id' => $interviewForm->id,
+                        ]);
+                    }
+                }
             }
         }
         
@@ -197,7 +208,7 @@ class UserController extends Controller
 
         if(!Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->finished) Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->update(['finished' => true]);
 
-        if(Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->level->questions()->where('answer_type', 'ESSAY')->count() == 0) {
+        if(Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->level->questions()->where('answer_type', 'ESSAY')->count() == 0 && Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->level->questions()->where('answer_type', 'FORM')->count() == 0) {
             $totalScore = 0;
 
             foreach(Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->answers()->get() as $answer){

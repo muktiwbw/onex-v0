@@ -71,7 +71,7 @@ class AdminController extends Controller
 
         return view('admin.show_user_result', [
             'answer_sheet' => User::find($user_id)->answer_sheets()->where('level_id', $level_id)->first(),
-            'total_score' => $totalScore / ($overalNonChecklistScore + $overalChecklistScore) * 100,
+            'total_score' => User::find($user_id)->answer_sheets()->where('level_id', $level_id)->first()->answers()->whereIn('type', ['MULTIPLE', 'CHECKLIST'])->count() > 0 ? $totalScore / ($overalNonChecklistScore + $overalChecklistScore) * 100 : 0,
             'levels' => Level::all(),
         ]);
     }
@@ -123,6 +123,14 @@ class AdminController extends Controller
         return redirect()->route('admin-user-result', [
             'user_id' => $answer_sheet->user->id,
             'level_id' => $answer_sheet->level->id,
+        ]);
+    }
+
+    public function check_form($user_id, $level_id){
+        return view('admin.check_form', [
+            'levels' => Level::all(),
+            'level' => Level::find($level_id),
+            'answer_sheet' => User::find($user_id)->answer_sheets()->where('level_id', $level_id)->first(),
         ]);
     }
 }

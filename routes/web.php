@@ -31,6 +31,10 @@ Route::prefix('/admin')->middleware('auth', 'admin')->group(function(){
     Route::get('/users/{user_id}/{level_id}/check_essay', 'AdminController@check_essay')->name('admin-user-essay-check');
     // Submit essay
     Route::post('/users/essay/submit', 'AdminController@submit_essay')->name('admin-user-essay-submit');
+    // Shows form for checking form
+    Route::get('/users/{user_id}/{level_id}/check_form', 'AdminController@check_form')->name('admin-user-form-check');
+    // Submit form
+    Route::post('/users/form/submit', 'AdminController@submit_form')->name('admin-user-form-submit');
     
     // Shows list of exam levels
     Route::get('/exams', 'ExamController@index')->name('admin-exams');

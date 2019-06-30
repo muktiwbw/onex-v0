@@ -48,8 +48,13 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Skor Total</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                @if($answer_sheet->report()->count() == 0 && $answer_sheet->level->questions()->where('answer_type', 'ESSAY')->count() > 0)
-                                    <a class="btn btn-success mt-2" href="{{route('admin-user-essay-check', ['user_id' => $answer_sheet->user_id, 'level_id' => $answer_sheet->level_id])}}">Check Essay</a>
+                                @if($answer_sheet->report()->count() == 0)
+                                    @if($answer_sheet->level->questions()->where('answer_type', 'ESSAY')->count() > 0)
+                                        <a class="btn btn-success mt-2" href="{{route('admin-user-essay-check', ['user_id' => $answer_sheet->user_id, 'level_id' => $answer_sheet->level_id])}}">Check Essay</a>
+                                    @endif
+                                    @if($answer_sheet->level->questions()->where('answer_type', 'FORM')->count() > 0)
+                                        <a class="btn btn-success mt-2" href="{{route('admin-user-form-check', ['user_id' => $answer_sheet->user_id, 'level_id' => $answer_sheet->level_id])}}">Check Formulir</a>
+                                    @endif
                                 @else
                                     {{$answer_sheet->report->score}}
                                 @endif
