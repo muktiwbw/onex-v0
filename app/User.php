@@ -44,4 +44,8 @@ class User extends Authenticatable
     public function answer_sheets(){
         return $this->hasMany('App\AnswerSheet');
     }
+
+    public function interview_forms(){
+        return $this->hasMany('App\InterviewForm');
+    }
 }

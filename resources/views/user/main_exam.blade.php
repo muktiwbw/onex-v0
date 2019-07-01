@@ -40,7 +40,7 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#level" aria-expanded="true" aria-controls="level">
           <i class="fas fa-fw fa-graduation-cap"></i>
-          <span>Levels</span>
+          <span>Level</span>
         </a>
         <div id="level" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
@@ -53,14 +53,14 @@
       </li>
 
       <hr class="sidebar-divider d-none d-md-block">
-
+      
       <li class="nav-item">
-        <a class="nav-link" target="_blank" href="/files/pdf/01_modul.pdf">
+        <a class="nav-link" target="_blank" href="/files/pdf/Kamus_kompetensi.pdf">
           <i class="fas fa-fw fa-book"></i>
           <span>Kamus Kompetensi</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" target="_blank" href="/files/pdf/02_wareframe.pdf">
+        <a class="nav-link" target="_blank" href="{{route('list-applicants')}}">
           <i class="fas fa-fw fa-book"></i>
           <span>Formulir Penilaian</span></a>
       </li>
