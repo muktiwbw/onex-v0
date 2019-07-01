@@ -40,7 +40,7 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#level" aria-expanded="true" aria-controls="level">
           <i class="fas fa-fw fa-graduation-cap"></i>
-          <span>Exam</span>
+          <span>Levels</span>
         </a>
         <div id="level" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
