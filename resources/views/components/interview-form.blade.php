@@ -35,14 +35,23 @@
             <div class="custom-control custom-checkbox ">
                 <input type="radio" id="PASSED" @if(Auth::user()->privilege->type=='ADMIN') name="result[{{$answer['i']}}][{{$answer['j']}}]" @else name="result" @endif class="custom-control-input" value="PASSED" @if(isset($answer['result']) && $answer['result']=='PASSED') checked @endif @if(Auth::user()->privilege->type == 'ADMIN') disabled @endif>
                 <label class="custom-control-label" for="PASSED">Dapat Disarankan</label>
+                <small class="form-text text-muted">
+                    Bila kompetensi mendukung bidang pekerjaan yang dituju
+                </small>
             </div>
             <div class="custom-control custom-checkbox ">
                 <input type="radio" id="RECONSIDERED" @if(Auth::user()->privilege->type=='ADMIN') name="result[{{$answer['i']}}][{{$answer['j']}}]" @else name="result" @endif class="custom-control-input" value="RECONSIDERED" @if(isset($answer['result']) && $answer['result']=='RECONSIDERED') checked @endif @if(Auth::user()->privilege->type == 'ADMIN') disabled @endif>
                 <label class="custom-control-label" for="RECONSIDERED">Dipertimbangkan</label>
+                <small class="form-text text-muted">
+                    Bila subyek hanya memiliki 2 hingga 3 kompetensi yang diharapkan
+                </small>
             </div>
             <div class="custom-control custom-checkbox ">
                 <input type="radio" id="REJECTED" @if(Auth::user()->privilege->type=='ADMIN') name="result[{{$answer['i']}}][{{$answer['j']}}]" @else name="result" @endif class="custom-control-input" value="REJECTED" @if(isset($answer['result']) && $answer['result']=='REJECTED') checked @endif @if(Auth::user()->privilege->type == 'ADMIN') disabled @endif>
                 <label class="custom-control-label" for="REJECTED">Tidak dapat disarankan</label>
+                <small class="form-text text-muted">
+                    Bila kompetensi tidak sesuai dengan bidang yang dituju
+                </small>
             </div>
         </div>
 
