@@ -6,6 +6,11 @@
     <h4 class="h3 mb-4 text-gray-800 text-center">
         {{$answer_sheet->user->name}}
     </h4>
+    @if($answer_sheet->report()->count() > 0)
+        <h4 class="h3 mb-4 mt-4 text-gray-600 text-center">
+            {{ $answer_sheet->report->score >= $answer_sheet->level->exam_threshold ? 'Selamat kamu lulus dari tahap ini' : 'Maaf kamu belum lulus, Belajar Lagi yaa!' }}
+        </h4>
+    @endif
     <div class="row">
         <div class="col-xl-4 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
