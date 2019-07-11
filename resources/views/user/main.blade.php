@@ -62,7 +62,7 @@
       <li class="nav-item">
         <a class="nav-link" target="_blank" href="{{route('list-applicants')}}">
           <i class="fas fa-fw fa-book"></i>
-          <span>Format Penilaian</span></a>
+          <span>Formulir Penilaian</span></a>
       </li>
 
     </ul>

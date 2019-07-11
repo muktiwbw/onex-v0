@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class InterviewForm extends Model
 {
     protected $fillable = [
-        'full_name', 'date_of_birth', 'education', 'unit', 'position', 'interviewer', 'date_of_interview', 'result', 'type', 'user_id', 'answer_sheet_id'
+        'full_name', 'date_of_birth', 'education', 'unit', 'position', 'interviewer', 'date_of_interview', 'result', 'type', 'user_id', 'answer_id'
     ];
 
     public function competencies(){

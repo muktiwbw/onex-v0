@@ -55,10 +55,10 @@
                                     <label>Jawaban Checklist</label>
                                     @foreach($question->checklists()->orderBy('id', 'asc')->get() as $checklist)
                                         <div class="form-row mb-3">
-                                            <div class="col-11">
+                                            <div class="col-10">
                                                 <input type="text" name="cl_body[]" class="form-control" value="{{$checklist->body}}">
                                             </div>
-                                            <div class="col-1">
+                                            <div class="col-2">
                                                 <input type="text"  name="cl_correct[]" class="form-control" min="1" max="5" value="{{$checklist->answer}}">
                                             </div>
                                         </div>

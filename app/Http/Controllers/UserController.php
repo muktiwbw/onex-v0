@@ -92,27 +92,60 @@ class UserController extends Controller
 
         if(Answer::where('answer_sheet_id', $fields['answer_sheet_id'])->where('question_id', $fields['question_id'])->count() > 0){
             $answer = Answer::where('answer_sheet_id', $fields['answer_sheet_id'])->where('question_id', $fields['question_id'])->first();
-
-            switch ($answer->type) {
-                case 'MULTIPLE':
-                    $answer->point = $request->mc_answer;
-                    break;
+            
+            if($answer->type != 'FORM'){
+    
+                switch ($answer->type) {
+                    case 'MULTIPLE':
+                        $answer->point = $request->mc_answer;
+                        break;
+                        
+                    case 'ESSAY':
+                        $answer->essay = $request->essay;
+                        break;
                     
-                case 'ESSAY':
-                    $answer->essay = $request->essay;
-                    break;
-                
-                case 'CHECKLIST':
-                    $answer->checklists = json_encode($checklists);
-                    break;
-            }
+                    case 'CHECKLIST':
+                        $answer->checklists = json_encode($checklists);
+                        break;
+                }
+    
+                $answer->save();
+            }else{
+                $interviewForm = $answer->interview_form;
+                $interviewForm->full_name = $request->full_name;
+                $interviewForm->date_of_birth = $request->date_of_birth;
+                $interviewForm->education = $request->education;
+                $interviewForm->unit = $request->unit;
+                $interviewForm->position = $request->position;
+                $interviewForm->interviewer = $request->interviewer;
+                $interviewForm->date_of_interview = $request->date_of_interview;
+                $interviewForm->result = $request->result;
+                $interviewForm->save();
 
-            $answer->save();
+                foreach ($request->competency as $key => $competency) {
+                    if(!is_null($competency) && !is_null($request->score[$key]) && !is_null($request->evidence[$key])){
+                        if($key < $interviewForm->competencies()->count()){
+                            $comp = $interviewForm->competencies[$key];
+                            $comp->competency = $request->competency[$key];
+                            $comp->score = $request->score[$key];
+                            $comp->evidence = $request->evidence[$key];
+                            $comp->save();
+                        }else{
+                            Competency::create([
+                                'competency' => $request->competency[$key],
+                                'score' => $request->score[$key],
+                                'evidence' => $request->evidence[$key],
+                                'interview_form_id' => $interviewForm->id,
+                            ]);
+                        }
+                    }
+                }
+            }
         }else{
             $newAnswer = Answer::create($fields);
 
             if($question->answer_type == 'FORM'){
-                InterviewForm::create([
+                $interviewForm = InterviewForm::create([
                     'full_name' => $request->full_name,
                     'date_of_birth' => $request->date_of_birth,
                     'education' => $request->education,
@@ -121,10 +154,21 @@ class UserController extends Controller
                     'interviewer' => $request->interviewer,
                     'date_of_interview' => $request->date_of_interview,
                     'result' => $request->result,
-                    'type' => $request->type,
+                    'type' => $request->interview_type,
                     'user_id' => Auth::id(),
                     'answer_id' => $newAnswer->id,
                 ]);
+
+                foreach ($request->competency as $key => $competency) {
+                    if(!is_null($competency) && !is_null($request->score[$key]) && !is_null($request->evidence[$key])){
+                        Competency::create([
+                            'competency' => $competency,
+                            'score' => $request->score[$key],
+                            'evidence' => $request->evidence[$key],
+                            'interview_form_id' => $interviewForm->id,
+                        ]);
+                    }
+                }
             }
         }
         
@@ -197,7 +241,7 @@ class UserController extends Controller
 
         if(!Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->finished) Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->update(['finished' => true]);
 
-        if(Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->level->questions()->where('answer_type', 'ESSAY')->count() == 0) {
+        if(Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->level->questions()->where('answer_type', 'ESSAY')->count() == 0 && Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->level->questions()->where('answer_type', 'FORM')->count() == 0) {
             $totalScore = 0;
 
             foreach(Auth::user()->answer_sheets()->where('level_id', $request->level_id)->first()->answers()->get() as $answer){
@@ -240,6 +284,13 @@ class UserController extends Controller
     }
 
     public function reset_exam($level_id){
+        if(Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->answers()->where('type', 'FORM')->count() > 0){
+            foreach (Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->answers()->where('type', 'FORM')->get() as $answer) {
+                $answer->interview_form->competencies()->delete();
+                $answer->interview_form->delete();
+            }
+        }
+        
         Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->answers()->delete();
         Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->evaluation_answers()->delete();
         Auth::user()->answer_sheets()->where('level_id', $level_id)->first()->report()->delete();
@@ -260,5 +311,33 @@ class UserController extends Controller
         return view('user.form', [
             'levels' => Level::all(),
         ]);
+    }
+
+    public function submit_applicant(Request $request){
+        $interviewForm = InterviewForm::create([
+            'full_name' => $request->full_name,
+            'date_of_birth' => $request->date_of_birth,
+            'education' => $request->education,
+            'unit' => $request->unit,
+            'position' => $request->position,
+            'interviewer' => $request->interviewer,
+            'date_of_interview' => $request->date_of_interview,
+            'result' => $request->result,
+            'type' => 'REAL',
+            'user_id' => Auth::id(),
+        ]);
+
+        foreach ($request->competency as $key => $competency) {
+            if(!is_null($competency) && !is_null($request->score[$key]) && !is_null($request->evidence[$key])){
+                Competency::create([
+                    'competency' => $competency,
+                    'score' => $request->score[$key],
+                    'evidence' => $request->evidence[$key],
+                    'interview_form_id' => $interviewForm->id,
+                ]);
+            }
+        }
+
+        return redirect()->route('list-applicants');
     }
 }

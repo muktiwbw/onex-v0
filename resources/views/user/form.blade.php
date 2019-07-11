@@ -10,19 +10,8 @@
                     </h6>
                 </div>
                 <div class="card-body">
-                    <form action="#" method="post">
+                    <form action="{{route('form-penilaian-create')}}" method="post">
                         @component('components.interview-form')@endcomponent
-
-
-
-
-                        <!-- INI VALUE NYA DIGANTI MUK +++++++++++++++++-->
-                        <input type="hidden" name="interview_type" value="SIMULATION"> <!-- INI VALUE NYA DIGANTI MUK +++++++++++++++++-->
-                        <!-- INI VALUE NYA DIGANTI MUK +++++++++++++++++-->
-
-
-
-                        
                         <div class="text-right">
                             <input type="submit" class="btn btn-primary" value="Simpan">
                         </div>

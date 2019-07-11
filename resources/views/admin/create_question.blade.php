@@ -49,10 +49,10 @@
                                 <!-- <div><button id="add-checklist">Tambah Checklist</button><button id="remove-checklist">Kurangi Checklist</button></div> -->
 
                                 <div class="form-row mb-3" cl-number="1" cl-tail="true">
-                                    <div class="col-11">
+                                    <div class="col-10">
                                         <input type="text" name="checklist[]" class="form-control checklist-elems" placeholder="Item">
                                     </div>
-                                    <div class="col-1">
+                                    <div class="col-2">
                                         <input type="text"  name="cl_correct[]" class="form-control" min="1" max="5">
                                     </div>
                                 </div>
@@ -150,7 +150,7 @@
                 node.setAttribute('cl-number', newNumber)
                 node.setAttribute('cl-tail', "true")
                 node.className = "form-row mb-3"
-                node.innerHTML = '<div class="col-11"><input type="text" name="checklist[]" class="form-control checklist-elems" placeholder="Item"></div><div class="col-1"><input type="text"  name="cl_correct[]" class="form-control" min="1" max="5"></div>'
+                node.innerHTML = '<div class="col-10"><input type="text" name="checklist[]" class="form-control checklist-elems" placeholder="Item"></div><div class="col-2"><input type="text"  name="cl_correct[]" class="form-control" min="1" max="5"></div>'
                 answerChecklist.appendChild(node)
             })
 

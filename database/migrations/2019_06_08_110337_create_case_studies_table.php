@@ -16,8 +16,8 @@ class CreateCaseStudiesTable extends Migration
         Schema::create('case_studies', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedSmallInteger('number');
-            $table->string('title');
-            $table->text('body');
+            $table->text('title');
+            $table->longText('body');
             $table->string('type')->default('TEXT'); // text and audio
             $table->unsignedBigInteger('level_id');
             $table->timestamps();
